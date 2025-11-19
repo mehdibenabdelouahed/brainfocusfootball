@@ -296,7 +296,7 @@
 
                 <div class="flex-1 w-full">
                     <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 text-[11px]">
-                        <p class="text-slate-400 text-[10px] mb-2">Aperçu d’un profile type</p>
+                        <p class="text-slate-400 text-[10px] mb-2">Aperçu d’un profil type</p>
                         <div class="space-y-2">
                             <div class="flex items-center gap-3">
                                  <div class="w-12 h-12 rounded-full overflow-hidden border border-slate-700">
@@ -318,7 +318,7 @@
                                     <p class="font-semibold">RSC Anderlecht</p>
                                 </div>
                                 <div class="bg-slate-900 rounded-lg p-2">
-                                    <p class="text-slate-400 text-[10px]">Poste</p>
+                                    <p class="text-slate-400 text-[10px]">Postee</p>
                                     <p class="font-semibold">10 / 8 offensif</p>
                                 </div>
                                 <div class="bg-slate-900 rounded-lg p-2">
