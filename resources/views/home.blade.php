@@ -23,11 +23,13 @@
 </div>
 
 
+                        
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="#articles" class="text-slate-300 hover:text-emerald-400 transition">Catégories</a>
-                <a href="#profil-joueur" class="text-slate-300 hover:text-emerald-400 transition">Profil joueurs</a>
-                <a href="#comment-ca-marche" class="text-slate-300 hover:text-emerald-400 transition">Comment ça marche</a>
+                <a href="{{ route('articles.index') }}" class="hover:text-emerald-400">Articles</a>
+                <a href="{{ route('player.profile') }}" class="hover:text-emerald-400">Profil joueur</a>
+                <a href="{{ route('how-it-works') }}" class="hover:text-emerald-400">Comment ça marche</a>
             </nav>
+
 
             <div class="flex items-center gap-2 text-xs">
         
