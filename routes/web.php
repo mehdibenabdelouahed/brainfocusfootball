@@ -13,8 +13,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 
 // Page article Nutrition (vue: resources/views/articles/nutrition.blade.php)
+// Page article Nutrition (vue: resources/views/articles/nutrition.blade.php)
 Route::get('/articles/nutrition', function () {
-    return view('articles.nutrition');
+    return view('article');
 })->name('articles.nutrition');
 
 // Profil joueur
@@ -22,4 +23,9 @@ Route::get('/profil-joueur', [PlayerProfileController::class, 'index'])->name('p
 
 // Comment ça marche
 Route::get('/comment-ca-marche', [HowItWorksController::class, 'index'])->name('how-it-works');
+
+// TEST ROUTE FOR NEW DESIGN
+Route::get('/test-article', function () {
+    return view('article');
+});
 

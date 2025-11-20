@@ -7,13 +7,13 @@
 
     {{-- NAVBAR --}}
     <header class="py-2 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
            <div class="flex items-center gap-3">
     <a href="/" class="flex items-center gap-2">
         <img
             src="/images/logoBFF.png"
             alt="Logo Brain Focus Football"
-            class="w-12 h-12 object-contain"
+            class="w-14 h-14 object-contain"
         >
         <div class="leading-tight text-sm">
             <p class="font-semibold text-[23px]">Brain Focus Football</p>
@@ -25,21 +25,21 @@
 
                         
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="{{ route('articles.index') }}" class="hover:text-emerald-400">Articles</a>
-                <a href="{{ route('player.profile') }}" class="hover:text-emerald-400">Profil joueur</a>
-                <a href="{{ route('how-it-works') }}" class="hover:text-emerald-400">Comment ça marche</a>
+                <a href="{{ route('articles.index') }}" class="hover:text-amber-400">Articles</a>
+                <a href="{{ route('player.profile') }}" class="hover:text-amber-400">Profil joueur</a>
+                <a href="{{ route('how-it-works') }}" class="hover:text-amber-400">Comment ça marche</a>
             </nav>
 
 
             <div class="flex items-center gap-2 text-xs">
         
                 <a href="#"
-                   class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-emerald-400 text-slate-200 hover:text-emerald-300 transition">
+                   class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
                     Connexion
                 </a>
                 {{-- Plus tard : href="{{ route('register') }}" --}}
                 <a href="#"
-                   class="px-3 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition bff-btn-main">
+                   class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
                     Créer un profil
                 </a>
             </div>
@@ -48,18 +48,25 @@
 
     <main class="flex-1">
         {{-- HERO avec parallax + reveal + tilt --}}
-        <section class="relative bff-parallax-wrapper">
-            <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-900 opacity-90"></div>
+        <section class="relative bff-parallax-wrapper overflow-hidden">
+            {{-- Background Image with Blur --}}
+            <div class="absolute inset-0 z-0">
+                <img src="/images/stade.jpg" alt="Background Stadium" class="w-full h-full object-cover opacity-80">
+                <div class="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-slate-950/70 to-amber-900/60"></div>
+            </div>
+            
+            {{-- Old gradient (removed/merged above) --}}
+            {{-- <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-amber-900 opacity-90"></div> --}}
             <div class="bff-parallax-layer"></div>
 
             <div class="relative max-w-6xl mx-auto px-4 py-12 lg:py-20 flex flex-col lg:flex-row items-center gap-10 bff-reveal">
                 {{-- Colonne texte --}}
                 <div class="flex-1 bff-animate-fade-in-up">
                 
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 drop-shadow-xl">
                         Devenir pro commence <span class="bff-title-highlight">dans la tête</span>.
                     </h1>
-                    <p class="text-sm sm:text-base text-slate-300 mb-6 max-w-xl">
+                    <p class="text-sm sm:text-base text-white drop-shadow-lg mb-6 max-w-xl">
                         Brain Focus Football t’explique les coulisses du football professionnel :
                         mental, carrière, agents, réseaux sociaux, hygiène de vie…  
                         Et te permet de créer un profil joueur pour te montrer comme un pro.
@@ -68,16 +75,16 @@
                     <div class="flex flex-wrap items-center gap-3 mb-6">
                         {{-- Plus tard : route('register') --}}
                         <a href="#"
-                           class="inline-flex items-center justify-center px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-sm font-semibold shadow-lg shadow-emerald-500/30 transition bff-btn-main bff-btn-pulse">
+                           class="inline-flex items-center justify-center px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold shadow-lg shadow-amber-500/30 transition bff-btn-main bff-btn-pulse">
                             Créer mon profil joueur
                         </a>
                         <a href="#articles"
-                           class="inline-flex items-center justify-center px-5 py-3 rounded-full border border-slate-600 hover:border-emerald-400 text-sm font-semibold text-slate-200 hover:text-emerald-300 transition">
+                           class="inline-flex items-center justify-center px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
                             Découvrir les articles
                         </a>
                     </div>
 
-                    <div class="flex items-center gap-6 text-[11px] text-slate-400">
+                    <div class="flex items-center gap-6 text-[11px] text-slate-100">
                         <div>
                             <span class="block font-semibold text-white text-xs">Pour joueurs 12–23 ans</span>
                             <span>Axé mental, carrière & entourage</span>
@@ -93,7 +100,7 @@
                 {{-- Colonne carte profil avec tilt 3D --}}
                 <div class="flex-1 w-full">
                     <div class="relative w-full max-w-md mx-auto">
-                        <div class="absolute -inset-1 bg-gradient-to-tr from-emerald-500/50 via-sky-500/30 to-purple-500/40 rounded-3xl blur-xl opacity-70 bff-animate-gradient"></div>
+                        <div class="absolute -inset-1 bg-gradient-to-tr from-amber-500/50 via-sky-500/30 to-purple-500/40 rounded-3xl blur-xl opacity-70 bff-animate-gradient"></div>
 
                         <div class="relative bg-slate-900/95 border border-slate-700/70 rounded-3xl p-5 shadow-2xl text-[11px] bff-card-tilt bff-card-glow">
                             <div class="bff-card-tilt-inner">
@@ -102,7 +109,7 @@
                                         <p class="text-slate-400 text-[10px]">Profil joueur</p>
                                         <p class="text-lg font-semibold">Ilian</p>
                                     </div>
-                                    <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/40 text-[10px]">
+                                    <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/40 text-[10px]">
                                         Objectif : signer pro
                                     </span>
                                 </div>
@@ -126,12 +133,12 @@
                                     <p class="text-slate-400 text-[10px] mb-1">Vidéo mise en avant</p>
                                     <div class="aspect-video rounded-xl overflow-hidden relative">
                                         <video
-                                            src="/videos/header.mp4"
+                                            src="/videos/ilian.mp4"
                                             autoplay
                                             muted
                                             loop
                                             playsinline
-                                            class="absolute inset-0 bg-gradient-to-tr from-slate-950/30 to-transparent">
+                                            class="absolute inset-0 w-full h-full object-cover bg-gradient-to-tr from-slate-950/30 to-transparent">
                                         </video>
                                     </div>
                                 </div>
@@ -140,15 +147,15 @@
                                     <p class="text-slate-400 text-[10px] mb-1">Objectifs</p>
                                     <ul class="space-y-1">
                                         <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                                             Intégrer un centre de formation pro
                                         </li>
                                         <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                                             Publier 1 nouvelle vidéo / mois
                                         </li>
                                         <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                                             Travailler le mental & la pression des matchs
                                         </li>
                                     </ul>
@@ -159,7 +166,7 @@
                                         Montre ton profil aux clubs & agents, pas seulement à tes potes.
                                     </p>
                                     {{-- Plus tard : route('register') --}}
-                                    <a href="#" class="text-[10px] text-emerald-300 hover:text-emerald-200">
+                                    <a href="#" class="text-[10px] text-amber-300 hover:text-amber-200">
                                         Créer mon profil →
                                     </a>
                                 </div>
@@ -180,7 +187,7 @@
 
             <div class="grid md:grid-cols-3 gap-5 text-sm bff-reveal-stagger">
                 <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-                    <p class="text-xs uppercase text-emerald-400 mb-1">Étape 1</p>
+                    <p class="text-xs uppercase text-amber-400 mb-1">Étape 1</p>
                     <h3 class="font-semibold mb-1">Comprendre le système</h3>
                     <p class="text-slate-300 text-xs">
                         Articles sur le mental, les agents, les essais, les réseaux sociaux,
@@ -189,7 +196,7 @@
                 </div>
 
                 <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-                    <p class="text-xs uppercase text-emerald-400 mb-1">Étape 2</p>
+                    <p class="text-xs uppercase text-amber-400 mb-1">Étape 2</p>
                     <h3 class="font-semibold mb-1">Structurer ta carrière</h3>
                     <p class="text-slate-300 text-xs">
                         Tu clarifies tes objectifs : où tu veux aller, en combien de temps,
@@ -198,7 +205,7 @@
                 </div>
 
                 <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
-                    <p class="text-xs uppercase text-emerald-400 mb-1">Étape 3</p>
+                    <p class="text-xs uppercase text-amber-400 mb-1">Étape 3</p>
                     <h3 class="font-semibold mb-1">Créer ta vitrine</h3>
                     <p class="text-slate-300 text-xs">
                         Tu crées un profil joueur propre, avec vidéos, stats et description.
@@ -218,40 +225,40 @@
             </p>
 
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 text-sm bff-reveal-stagger">
-                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-emerald-400/70 transition">
-                    <p class="text-[11px] uppercase tracking-wide text-emerald-400 mb-1">Mental</p>
+                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-amber-400/70 transition">
+                    <p class="text-[11px] uppercase tracking-wide text-amber-400 mb-1">Mental</p>
                     <h3 class="font-semibold mb-1 text-sm">Confiance & pression</h3>
                     <p class="text-slate-300 text-xs mb-3">
                         Gestion du stress, concurrence, banc, critiques, réseaux sociaux…
                     </p>
-                    <span class="text-[11px] text-emerald-300">Lire les articles →</span>
+                    <a href="{{ route('articles.index') }}" class="text-[11px] text-amber-300 hover:text-amber-200">Lire les articles →</a>
                 </div>
 
-                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-emerald-400/70 transition">
-                    <p class="text-[11px] uppercase tracking-wide text-emerald-400 mb-1">Carrière</p>
+                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-amber-400/70 transition">
+                    <p class="text-[11px] uppercase tracking-wide text-amber-400 mb-1">Carrière</p>
                     <h3 class="font-semibold mb-1 text-sm">Agents, essais & contrats</h3>
                     <p class="text-slate-300 text-xs mb-3">
                         Comment approcher un agent, se préparer à un essai et éviter les pièges.
                     </p>
-                    <span class="text-[11px] text-emerald-300">Découvrir →</span>
+                    <a href="{{ route('articles.index') }}" class="text-[11px] text-amber-300 hover:text-amber-200">Découvrir →</a>
                 </div>
 
-                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-emerald-400/70 transition">
-                    <p class="text-[11px] uppercase tracking-wide text-emerald-400 mb-1">Hygiène de vie</p>
+                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-amber-400/70 transition">
+                    <p class="text-[11px] uppercase tracking-wide text-amber-400 mb-1">Hygiène de vie</p>
                     <h3 class="font-semibold mb-1 text-sm">Sommeil, nutrition, récup</h3>
                     <p class="text-slate-300 text-xs mb-3">
                         Ce que les pros font au quotidien pour rester au top physiquement.
                     </p>
-                    <span class="text-[11px] text-emerald-300">Voir plus →</span>
+                    <a href="{{ route('articles.nutrition') }}" class="text-[11px] text-amber-300 hover:text-amber-200">Voir plus →</a>
                 </div>
 
-                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-emerald-400/70 transition">
-                    <p class="text-[11px] uppercase tracking-wide text-emerald-400 mb-1">Environnement</p>
+                <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-4 hover:border-amber-400/70 transition">
+                    <p class="text-[11px] uppercase tracking-wide text-amber-400 mb-1">Environnement</p>
                     <h3 class="font-semibold mb-1 text-sm">Famille, école, distractions</h3>
                     <p class="text-slate-300 text-xs mb-3">
                         Gérer les sorties, TikTok, les amis, l’école… sans perdre ton objectif de vue.
                     </p>
-                    <span class="text-[11px] text-emerald-300">Explorer →</span>
+                    <a href="{{ route('articles.index') }}" class="text-[11px] text-amber-300 hover:text-amber-200">Explorer →</a>
                 </div>
             </div>
         </section>
@@ -269,15 +276,15 @@
 
                     <ul class="space-y-3 text-sm text-slate-200">
                         <li class="flex gap-2">
-                            <span class="mt-1 w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span class="mt-1 w-2 h-2 rounded-full bg-amber-400"></span>
                             <span><strong>Infos claires :</strong> poste, club, âge, taille, pied fort, niveau.</span>
                         </li>
                         <li class="flex gap-2">
-                            <span class="mt-1 w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span class="mt-1 w-2 h-2 rounded-full bg-amber-400"></span>
                             <span><strong>Vidéos :</strong> best-of, matchs complets, entraînements.</span>
                         </li>
                         <li class="flex gap-2">
-                            <span class="mt-1 w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span class="mt-1 w-2 h-2 rounded-full bg-amber-400"></span>
                             <span><strong>Objectifs :</strong> ce que tu vises et comment tu comptes y arriver.</span>
                         </li>
                     </ul>
@@ -285,12 +292,12 @@
                     <div class="mt-6 flex flex-wrap gap-3">
                         {{-- Plus tard : route('register') --}}
                         <a href="#"
-                           class="px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition bff-btn-main">
+                           class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/30 transition bff-btn-main">
                             Créer mon profil maintenant
                         </a>
                         {{-- Plus tard : route('login') --}}
                         <a href="#"
-                           class="px-5 py-3 rounded-full border border-slate-600 hover:border-emerald-400 text-sm font-semibold text-slate-200 hover:text-emerald-300 transition">
+                           class="px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
                             J’ai déjà un compte
                         </a>
                     </div>
@@ -337,12 +344,12 @@
                                 <p class="text-slate-400 text-[10px] mb-1">Vidéo principale</p>
                                 <div class="aspect-video rounded-xl overflow-hidden relative">
                                         <video
-                                            src="/videos/header.mp4"
+                                            src="/videos/ilian.mp4"
                                             autoplay
                                             muted
                                             loop
                                             playsinline
-                                            class="absolute inset-0 bg-gradient-to-tr from-slate-950/30 to-transparent">
+                                            class="absolute inset-0 w-full h-full object-cover bg-gradient-to-tr from-slate-950/30 to-transparent">
                                         </video>
                                     </div>
                             </div>
@@ -362,7 +369,7 @@
 
         {{-- CALL TO ACTION FINAL (reveal) --}}
         <section class="max-w-6xl mx-auto px-4 py-10 lg:py-14 bff-reveal">
-            <div class="bg-gradient-to-r from-emerald-600/20 via-emerald-500/10 to-sky-500/10 border border-emerald-500/30 rounded-3xl p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="bg-gradient-to-r from-amber-600/20 via-amber-500/10 to-sky-500/10 border border-amber-500/30 rounded-3xl p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-bold mb-2">
                         Prendre ta carrière au sérieux, ça commence maintenant.
@@ -375,11 +382,11 @@
                 <div class="flex flex-wrap gap-3">
                     {{-- Plus tard : route('register') --}}
                     <a href="#"
-                       class="px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/40 transition bff-btn-main bff-btn-pulse">
+                       class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/40 transition bff-btn-main bff-btn-pulse">
                         Je crée mon profil maintenant
                     </a>
                     <a href="#comment-ca-marche"
-                       class="px-5 py-3 rounded-full border border-slate-200/40 hover:border-emerald-300 text-sm font-semibold text-slate-100 hover:text-emerald-200 transition">
+                       class="px-5 py-3 rounded-full border border-slate-200/40 hover:border-amber-300 text-sm font-semibold text-slate-100 hover:text-amber-200 transition">
                         Voir comment ça fonctionne
                     </a>
                 </div>
@@ -392,9 +399,9 @@
         <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
             <p>© {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
             <div class="flex gap-4">
-                <a href="#" class="hover:text-emerald-300">Mentions légales</a>
-                <a href="#" class="hover:text-emerald-300">Confidentialité</a>
-                <a href="#" class="hover:text-emerald-300">Contact</a>
+                <a href="#" class="hover:text-amber-300">Mentions légales</a>
+                <a href="#" class="hover:text-amber-300">Confidentialité</a>
+                <a href="#" class="hover:text-amber-300">Contact</a>
             </div>
         </div>
     </footer>
