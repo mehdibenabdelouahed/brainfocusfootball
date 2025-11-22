@@ -5,12 +5,7 @@
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white px-4 py-12 relative">
     {{-- Bouton retour à l'accueil --}}
-    <a href="{{ route('home') }}" class="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition group z-10">
-        <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
-        <span class="text-sm font-medium">Accueil</span>
-    </a>
+
 
     <div class="max-w-4xl mx-auto">
         {{-- En-tête --}}

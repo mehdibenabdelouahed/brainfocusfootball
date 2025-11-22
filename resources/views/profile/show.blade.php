@@ -6,14 +6,7 @@
 <div class="min-h-screen bg-slate-950 text-white px-4 py-12">
     <div class="max-w-4xl mx-auto">
         {{-- Bouton retour --}}
-        <div class="mb-6">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-amber-300 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Retour à l'accueil
-            </a>
-        </div>
+
 
         {{-- Carte profil principal --}}
         <div class="relative mb-8">
