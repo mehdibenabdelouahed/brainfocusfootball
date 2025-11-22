@@ -6,7 +6,7 @@
 <div class="min-h-screen flex flex-col bg-slate-950 text-white">
 
     {{-- NAVBAR --}}
-    <header class="py-2 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+    <header class="py-2 border-b border-slate-800 bg-slate-950/80 backdrop-blur relative" style="z-index: 1000;">
         <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
            <div class="flex items-center gap-3">
     <a href="/" class="flex items-center gap-2">
@@ -25,23 +25,103 @@
 
                         
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="{{ route('articles.index') }}" class="hover:text-amber-400">Articles</a>
-                <a href="{{ route('player.profile') }}" class="hover:text-amber-400">Profil joueur</a>
-                <a href="{{ route('how-it-works') }}" class="hover:text-amber-400">Comment ça marche</a>
+                <a href="{{ route('articles.index') }}" class="hover:text-amber-400"></a>
+                <a href="{{ route('player.profile') }}" class="hover:text-amber-400">Nos talents</a>
+                <a href="{{ route('contact') }}" class="hover:text-amber-400">Contact</a>
             </nav>
 
 
             <div class="flex items-center gap-2 text-xs">
-        
-                <a href="#"
-                   class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
-                    Connexion
-                </a>
-                {{-- Plus tard : href="{{ route('register') }}" --}}
-                <a href="#"
-                   class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
-                    Créer un profil
-                </a>
+                @auth
+                    {{-- Menu utilisateur connecté --}}
+                    <div class="relative">
+                        <button id="userMenuButton" type="button" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 transition">
+                            @if(Auth::user()->profile_photo)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-full object-cover">
+                            @else
+                                <div class="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-bold text-xs">
+                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                </div>
+                            @endif
+                            <span class="text-slate-200">{{ Auth::user()->name }}</span>
+                            <svg id="userMenuIcon" class="w-4 h-4 text-slate-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        {{-- Dropdown menu --}}
+                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-slate-800 border-2 border-amber-500/50 rounded-xl shadow-2xl" style="z-index: 9999;">
+                            <div class="py-2">
+                                <a href="{{ route('profile.show', Auth::id()) }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
+                                    <span class="flex items-center gap-2">
+                                        <span class="text-lg">👤</span>
+                                        <span>Voir mon profil</span>
+                                    </span>
+                                </a>
+                                <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
+                                    <span class="flex items-center gap-2">
+                                        <span class="text-lg">✏️</span>
+                                        <span>Éditer mon profil</span>
+                                    </span>
+                                </a>
+                                @if(!Auth::user()->profile_completed)
+                                    <a href="{{ route('profile.create') }}" class="block px-4 py-3 text-sm text-amber-300 hover:bg-amber-500/20 transition font-semibold">
+                                        <span class="flex items-center gap-2">
+                                            <span class="text-lg">⭐</span>
+                                            <span>Compléter mon profil</span>
+                                        </span>
+                                    </a>
+                                @endif
+                                <div class="border-t border-slate-600 my-2"></div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition font-semibold">
+                                        <span class="flex items-center gap-2">
+                                            <span class="text-lg">🚪</span>
+                                            <span>Déconnexion</span>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Menu dropdown toggle
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const menuButton = document.getElementById('userMenuButton');
+                            const menuDropdown = document.getElementById('userMenuDropdown');
+                            const menuIcon = document.getElementById('userMenuIcon');
+
+                            if (menuButton && menuDropdown) {
+                                // Toggle menu on button click
+                                menuButton.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    menuDropdown.classList.toggle('hidden');
+                                    menuIcon.classList.toggle('rotate-180');
+                                });
+
+                                // Close menu when clicking outside
+                                document.addEventListener('click', function(e) {
+                                    if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
+                                        menuDropdown.classList.add('hidden');
+                                        menuIcon.classList.remove('rotate-180');
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                @else
+                    {{-- Boutons pour visiteurs --}}
+                    <a href="{{ route('login') }}"
+                       class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
+                        Connexion
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
+                        Créer un profil
+                    </a>
+                @endauth
             </div>
         </div>
     </header>
@@ -73,12 +153,18 @@
                     </p>
 
                     <div class="flex flex-wrap items-center gap-3 mb-6">
-                        {{-- Plus tard : route('register') --}}
-                        <a href="#"
-                           class="inline-flex items-center justify-center px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold shadow-lg shadow-amber-500/30 transition bff-btn-main bff-btn-pulse">
-                            Créer mon profil joueur
-                        </a>
-                        <a href="#articles"
+                        @auth
+                            <a href="{{ route('profile.edit') }}"
+                               class="inline-flex items-center justify-center px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold shadow-lg shadow-amber-500/30 transition bff-btn-main bff-btn-pulse">
+                                Voir mon profil joueur
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}"
+                               class="inline-flex items-center justify-center px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold shadow-lg shadow-amber-500/30 transition bff-btn-main bff-btn-pulse">
+                                Créer mon profil joueur
+                            </a>
+                        @endauth
+                        <a href="{{ route('articles.index') }}"
                            class="inline-flex items-center justify-center px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
                             Découvrir les articles
                         </a>
@@ -165,10 +251,15 @@
                                     <p class="text-[10px] text-slate-400">
                                         Montre ton profil aux clubs & agents, pas seulement à tes potes.
                                     </p>
-                                    {{-- Plus tard : route('register') --}}
-                                    <a href="#" class="text-[10px] text-amber-300 hover:text-amber-200">
-                                        Créer mon profil →
-                                    </a>
+                                    @auth
+                                        <a href="{{ route('profile.edit') }}" class="text-[10px] text-amber-300 hover:text-amber-200">
+                                            Mon profil →
+                                        </a>
+                                    @else
+                                        <a href="{{ route('register') }}" class="text-[10px] text-amber-300 hover:text-amber-200">
+                                            Créer mon profil →
+                                        </a>
+                                    @endauth
                                 </div>
                             </div>
                         </div>
@@ -209,7 +300,6 @@
                     <h3 class="font-semibold mb-1">Créer ta vitrine</h3>
                     <p class="text-slate-300 text-xs">
                         Tu crées un profil joueur propre, avec vidéos, stats et description.
-                        Quand une opportunité arrive, tu as déjà quelque chose à envoyer.
                     </p>
                 </div>
             </div>
@@ -290,16 +380,25 @@
                     </ul>
 
                     <div class="mt-6 flex flex-wrap gap-3">
-                        {{-- Plus tard : route('register') --}}
-                        <a href="#"
-                           class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/30 transition bff-btn-main">
-                            Créer mon profil maintenant
-                        </a>
-                        {{-- Plus tard : route('login') --}}
-                        <a href="#"
-                           class="px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
-                            J’ai déjà un compte
-                        </a>
+                        @auth
+                            <a href="{{ route('profile.edit') }}"
+                               class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/30 transition bff-btn-main">
+                                Éditer mon profil
+                            </a>
+                            <a href="{{ route('profile.show', Auth::id()) }}"
+                               class="px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
+                                Voir mon profil public
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}"
+                               class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/30 transition bff-btn-main">
+                                Créer mon profil maintenant
+                            </a>
+                            <a href="{{ route('login') }}"
+                               class="px-5 py-3 rounded-full border border-slate-600 hover:border-amber-400 text-sm font-semibold text-slate-200 hover:text-amber-300 transition">
+                                J'ai déjà un compte
+                            </a>
+                        @endauth
                     </div>
                 </div>
 
@@ -380,14 +479,20 @@
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    {{-- Plus tard : route('register') --}}
-                    <a href="#"
-                       class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/40 transition bff-btn-main bff-btn-pulse">
-                        Je crée mon profil maintenant
-                    </a>
-                    <a href="#comment-ca-marche"
+                    @auth
+                        <a href="{{ route('profile.edit') }}"
+                           class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/40 transition bff-btn-main bff-btn-pulse">
+                            Éditer mon profil
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}"
+                           class="px-5 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-sm font-semibold text-slate-950 shadow-lg shadow-amber-500/40 transition bff-btn-main bff-btn-pulse">
+                            Je crée mon profil maintenant
+                        </a>
+                    @endauth
+                    <a href="{{ route('contact') }}"
                        class="px-5 py-3 rounded-full border border-slate-200/40 hover:border-amber-300 text-sm font-semibold text-slate-100 hover:text-amber-200 transition">
-                        Voir comment ça fonctionne
+                        Nous contacter
                     </a>
                 </div>
             </div>
@@ -399,9 +504,9 @@
         <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
             <p>© {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
             <div class="flex gap-4">
-                <a href="#" class="hover:text-amber-300">Mentions légales</a>
-                <a href="#" class="hover:text-amber-300">Confidentialité</a>
-                <a href="#" class="hover:text-amber-300">Contact</a>
+                <a href="{{ route('contact') }}" class="hover:text-amber-300">Contact</a>
+                <a href="{{ route('home') }}#" class="hover:text-amber-300">Mentions légales</a>
+                <a href="{{ route('home') }}#" class="hover:text-amber-300">Confidentialité</a>
             </div>
         </div>
     </footer>

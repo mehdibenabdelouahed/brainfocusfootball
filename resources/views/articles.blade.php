@@ -25,15 +25,15 @@
             <nav class="hidden md:flex items-center gap-6 text-sm">
                 <a href="{{ route('articles.index') }}" class="hover:text-amber-400 text-amber-400">Articles</a>
                 <a href="{{ route('player.profile') }}" class="hover:text-amber-400">Profil joueur</a>
-                <a href="{{ route('how-it-works') }}" class="hover:text-amber-400">Comment ça marche</a>
+                <a href="{{ route('contact') }}" class="hover:text-amber-400">Contact</a>
             </nav>
 
             <div class="flex items-center gap-2 text-xs">
-                <a href="#"
+                <a href="{{ route('login') }}"
                    class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
                     Connexion
                 </a>
-                <a href="#"
+                <a href="{{ route('register') }}"
                    class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
                     Créer un profil
                 </a>
@@ -223,9 +223,9 @@
         <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
             <p>© {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
             <div class="flex gap-4">
-                <a href="#" class="hover:text-amber-300">Mentions légales</a>
-                <a href="#" class="hover:text-amber-300">Confidentialité</a>
-                <a href="#" class="hover:text-amber-300">Contact</a>
+                <a href="mailto:contact@brainfocusfootball.com" class="hover:text-amber-300">Contact</a>
+                <a href="{{ route('home') }}#" class="hover:text-amber-300">Mentions légales</a>
+                <a href="{{ route('home') }}#" class="hover:text-amber-300">Confidentialité</a>
             </div>
         </div>
     </footer>
