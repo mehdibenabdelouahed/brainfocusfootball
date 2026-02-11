@@ -40,7 +40,7 @@ Route::get('/articles', [ArticleController::class, 'index'])->name('articles.ind
 
 // Page article Nutrition
 Route::get('/articles/nutrition', function () {
-    return view('article');
+    return view('articles.nutrition');
 })->name('articles.nutrition');
 
 // Profil joueur
@@ -69,7 +69,4 @@ Route::middleware('auth')->group(function () {
 // Public profile view
 Route::get('/profil/{id}', [ProfileController::class, 'show'])->name('profile.show');
 
-// TEST ROUTE FOR NEW DESIGN
-Route::get('/test-article', function () {
-    return view('article');
-});
+
