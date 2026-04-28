@@ -185,7 +185,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-slate-200">Email</h4>
-                                <p class="text-slate-400">contact@brainfocusfootball.com</p>
+                                <p class="text-slate-400">contact@brainfocusfootball.be</p>
                                 <p class="text-slate-500 text-sm mt-1">Réponse sous 24-48h</p>
                             </div>
                         </div>
