@@ -32,7 +32,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home'));
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
@@ -191,7 +191,7 @@ class AuthController extends Controller
         // Connecter l'utilisateur
         Auth::login($user);
 
-        return redirect()->route('home')->with('success', 'Votre mot de passe a été réinitialisé avec succès!');
+        return redirect()->route('dashboard')->with('success', 'Votre mot de passe a été réinitialisé avec succès !');
     }
 
     /**

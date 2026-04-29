@@ -6,108 +6,7 @@
 <div class="min-h-screen flex flex-col bg-slate-950 text-white">
 
     {{-- NAVBAR --}}
-    <header class="py-2 border-b border-slate-800 bg-slate-950 sticky top-0 z-[1000]">
-        <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
-            {{-- Logo --}}
-            <div class="flex items-center gap-3">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="/images/logoBFF.png" alt="Logo Brain Focus Football" class="w-14 h-14 object-contain">
-                    <div class="leading-tight text-sm">
-                        <p class="font-semibold text-[23px]">Brain Focus Football</p>
-                        <p class="text-[12px] text-slate-400">Les champions commencent par l'esprit</p>
-                    </div>
-                </a>
-            </div>
-
-            {{-- Desktop Nav --}}
-            <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="{{ route('articles.index') }}" class="hover:text-amber-400">Nos articles</a>
-                <a href="{{ route('player.profile') }}" class="hover:text-amber-400">Nos talents</a>
-                <a href="{{ route('contact') }}" class="hover:text-amber-400">Contact</a>
-            </nav>
-
-            {{-- Auth Buttons / User Menu --}}
-            <div class="flex items-center gap-2 text-xs">
-                @auth
-                    {{-- Menu utilisateur connecté --}}
-                    <div class="relative">
-                        <button id="userMenuButton" type="button" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 transition">
-                            @if(Auth::user()->profile_photo)
-                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-full object-cover">
-                            @else
-                                <div class="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-bold text-xs">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                </div>
-                            @endif
-                            <span class="text-slate-200">{{ Auth::user()->name }}</span>
-                            <svg id="userMenuIcon" class="w-4 h-4 text-slate-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        
-                        {{-- Dropdown menu --}}
-                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-slate-800 border-2 border-amber-500/50 rounded-xl shadow-2xl" style="z-index: 9999;">
-                            <div class="py-2">
-                                <a href="{{ route('profile.show', Auth::id()) }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
-                                    Voir mon profil
-                                </a>
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
-                                    Éditer mon profil
-                                </a>
-                                @if(!Auth::user()->profile_completed)
-                                    <a href="{{ route('profile.create') }}" class="block px-4 py-3 text-sm text-amber-300 hover:bg-amber-500/20 transition font-semibold">
-                                        Compléter mon profil
-                                    </a>
-                                @endif
-                                <div class="border-t border-slate-600 my-2"></div>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition font-semibold">
-                                        Déconnexion
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        // Menu dropdown toggle
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const menuButton = document.getElementById('userMenuButton');
-                            const menuDropdown = document.getElementById('userMenuDropdown');
-                            const menuIcon = document.getElementById('userMenuIcon');
-
-                            if (menuButton && menuDropdown) {
-                                // Toggle menu on button click
-                                menuButton.addEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    menuDropdown.classList.toggle('hidden');
-                                    menuIcon.classList.toggle('rotate-180');
-                                });
-
-                                // Close menu when clicking outside
-                                document.addEventListener('click', function(e) {
-                                    if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
-                                        menuDropdown.classList.add('hidden');
-                                        menuIcon.classList.remove('rotate-180');
-                                    }
-                                });
-                            }
-                        });
-                    </script>
-                @else
-                    <a href="{{ route('login') }}"
-                       class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
-                        Connexion
-                    </a>
-                    <a href="{{ route('register') }}"
-                       class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
-                        Créer un profil
-                    </a>
-                @endauth
-            </div>
-        </div>
-    </header>
+    @include('partials.navbar')
 
     <main class="flex-1 min-h-screen bg-slate-950 text-white">
         {{-- HERO avec parallax + reveal + tilt --}}
@@ -166,6 +65,14 @@
                     </div>
                 </div>
 
+                {{-- Scroll Indicator --}}
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 animate-bounce cursor-pointer opacity-40 hover:opacity-100 transition-opacity hidden lg:flex" onclick="document.getElementById('comment-ca-marche').scrollIntoView({behavior: 'smooth'})">
+                    <span class="text-[10px] uppercase tracking-[0.2em]">Découvrir</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"></path>
+                    </svg>
+                </div>
+
                 {{-- Colonne carte profil avec tilt 3D --}}
                 <div class="flex-1 w-full">
                     <div class="relative w-full max-w-md mx-auto">
@@ -212,22 +119,66 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <p class="text-slate-400 text-[10px] mb-1">Objectifs</p>
-                                    <ul class="space-y-1">
-                                        <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                            Intégrer un centre de formation pro
-                                        </li>
-                                        <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                            Publier 1 nouvelle vidéo / mois
-                                        </li>
-                                        <li class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                            Travailler le mental & la pression des matchs
-                                        </li>
-                                    </ul>
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <p class="text-slate-400 text-[10px]">Radar de Performance</p>
+                                        <span class="text-[9px] text-amber-500 font-bold uppercase tracking-wider">Élite U19</span>
+                                    </div>
+                                    
+                                    <div class="relative bg-slate-800/40 rounded-2xl p-4 flex items-center justify-center border border-slate-700/30">
+                                        {{-- SVG Radar Chart --}}
+                                        <svg viewBox="0 0 100 100" class="w-32 h-32 transform drop-shadow-lg">
+                                            {{-- Background Hexagons --}}
+                                            <polygon points="50,5 93,30 93,80 50,100 7,80 7,30" fill="none" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <polygon points="50,25 73,38 73,63 50,75 27,63 27,38" fill="none" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            
+                                            {{-- Axis Lines --}}
+                                            <line x1="50" y1="50" x2="50" y2="5" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <line x1="50" y1="50" x2="93" y2="30" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <line x1="50" y1="50" x2="93" y2="80" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <line x1="50" y1="50" x2="50" y2="100" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <line x1="50" y1="50" x2="7" y2="80" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+                                            <line x1="50" y1="50" x2="7" y2="30" stroke="currentColor" stroke-width="0.5" class="text-slate-700" />
+
+                                            {{-- Performance Data Polygon --}}
+                                            <polygon 
+                                                points="50,15 85,35 80,75 50,90 20,75 15,35" 
+                                                fill="rgba(245, 158, 11, 0.3)" 
+                                                stroke="#f59e0b" 
+                                                stroke-width="1.5"
+                                                class="bff-animate-radar"
+                                            />
+
+                                            {{-- Data Points --}}
+                                            <circle cx="50" cy="15" r="1.5" fill="#f59e0b" />
+                                            <circle cx="85" cy="35" r="1.5" fill="#f59e0b" />
+                                            <circle cx="80" cy="75" r="1.5" fill="#f59e0b" />
+                                            <circle cx="50" cy="90" r="1.5" fill="#f59e0b" />
+                                            <circle cx="20" cy="75" r="1.5" fill="#f59e0b" />
+                                            <circle cx="15" cy="35" r="1.5" fill="#f59e0b" />
+                                        </svg>
+
+                                        {{-- Labels --}}
+                                        <div class="absolute inset-0 pointer-events-none text-[8px] font-bold text-slate-400">
+                                            <span class="absolute top-1 left-1/2 -translate-x-1/2 text-amber-500">MENTAL</span>
+                                            <span class="absolute top-1/4 right-0 translate-x-1">PHY</span>
+                                            <span class="absolute bottom-1/4 right-0 translate-x-1">TECH</span>
+                                            <span class="absolute bottom-1 left-1/2 -translate-x-1/2">VISION</span>
+                                            <span class="absolute bottom-1/4 left-0 -translate-x-1">VIT</span>
+                                            <span class="absolute top-1/4 left-0 -translate-x-1">SOCIAL</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3 grid grid-cols-2 gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
+                                            <span class="text-[9px] text-slate-400 italic">"Grosse force mentale sous pression"</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-amber-500/40"></div>
+                                            <span class="text-[9px] text-slate-400 italic">"À travailler : volume de jeu"</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
@@ -288,6 +239,30 @@
             </div>
         </section>
 
+        {{-- COMPTEURS DE STATS (Section Golden) --}}
+        <section class="bg-slate-900/40 border-y border-slate-800/50 py-12 bff-reveal">
+            <div class="max-w-6xl mx-auto px-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-black text-amber-500 mb-1 bff-counter" data-target="850">0</div>
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-medium">Joueurs Inscrits</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-black text-amber-500 mb-1 bff-counter" data-target="42">0</div>
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-medium">Articles Pro</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-black text-amber-500 mb-1 bff-counter" data-target="15">0</div>
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-medium">Centres Partenaires</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-black text-amber-500 mb-1 bff-counter" data-target="100" data-suffix="%">0</div>
+                        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-medium">Focus Mental</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {{-- ARTICLES / CATÉGORIES (reveal + stagger) --}}
         <section id="articles" class="max-w-6xl mx-auto px-4 py-10 lg:py-14 bff-reveal">
             <h2 class="text-2xl sm:text-3xl font-bold mb-3">Comprendre le monde du football pro</h2>
@@ -335,6 +310,56 @@
                 </div>
             </div>
         </section>
+
+        {{-- BANDEAU DÉFILANT TALENTS (Marquee Interactif) --}}
+        <section class="py-6 bg-slate-950/80 border-y border-slate-900/50 overflow-hidden bff-reveal">
+            <div class="max-w-6xl mx-auto px-4 mb-3 flex items-center gap-3 opacity-60">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <h2 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Talents à la une</h2>
+            </div>
+            
+            <div class="relative flex overflow-hidden group">
+                <div class="flex animate-marquee whitespace-nowrap gap-12 items-center py-2">
+                    @forelse ($players->concat($players) as $player) {{-- On double pour l'effet infini si peu de joueurs --}}
+                        <a href="{{ route('profile.show', $player->id) }}" class="flex items-center gap-4 group/item cursor-pointer">
+                            <div class="relative w-12 h-12 rounded-full overflow-hidden border border-slate-800 transition-all duration-500 group-hover/item:border-amber-500/50">
+                                @if($player->profile_photo)
+                                    <img src="{{ asset('storage/' . $player->profile_photo) }}" alt="{{ $player->name }}" class="w-full h-full object-cover blur-[1px] grayscale opacity-70 group-hover/item:blur-0 group-hover/item:grayscale-0 group-hover/item:opacity-100 transition-all duration-700">
+                                @else
+                                    <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                    </div>
+                                @endif
+                                <div class="absolute inset-0 bg-amber-500/10 group-hover/item:bg-transparent transition-colors"></div>
+                            </div>
+                            <div class="text-[11px]">
+                                <p class="font-bold text-slate-300 group-hover/item:text-amber-400 transition-colors">{{ $player->first_name }} {{ substr($player->last_name, 0, 1) }}.</p>
+                                <p class="text-[9px] text-slate-500 uppercase">{{ $player->position ?? 'Joueur' }}</p>
+                            </div>
+                        </a>
+                    @empty
+                        {{-- Fallback si pas encore de joueurs --}}
+                        @for($i=0; $i<6; $i++)
+                            <div class="flex items-center gap-4 opacity-30">
+                                <div class="w-12 h-12 rounded-full bg-slate-800"></div>
+                                <div class="text-[11px]">
+                                    <p class="font-bold text-slate-600">Talent BFF</p>
+                                    <p class="text-[9px] text-slate-700">À venir...</p>
+                                </div>
+                            </div>
+                        @endfor
+                    @endforelse
+                </div>
+                
+                {{-- Overlays de dégradé --}}
+                <div class="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-slate-950 to-transparent z-10"></div>
+                <div class="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-slate-950 to-transparent z-10"></div>
+            </div>
+        </section>
+
+
+
+
 
         {{-- SECTION PROFIL JOUEUR (reveal) --}}
         <section id="profil-joueur" class="bg-slate-900/70 border-y border-slate-800 bff-reveal">
@@ -449,7 +474,206 @@
             </div>
         </section>
 
+        {{-- TÉMOIGNAGES (Section Prestige) --}}
+        <section class="max-w-6xl mx-auto px-4 py-16 lg:py-20 bff-reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-3">Ils ont franchi un palier avec nous</h2>
+                <div class="w-16 h-1 bg-amber-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 bff-reveal-stagger">
+                {{-- Témoignage 1 --}}
+                <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl relative">
+                    <div class="absolute -top-4 -right-4 w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500/20 text-4xl font-serif">“</div>
+                    <p class="text-slate-300 italic mb-6 text-sm leading-relaxed">
+                        "Brain Focus Football m'a aidé à comprendre que mon talent ne suffisait pas. J'ai revu mon hygiène de vie et ma préparation mentale, et j'ai enfin signé en centre de formation."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30"></div>
+                        <div>
+                            <p class="font-bold text-sm">Lucas M.</p>
+                            <p class="text-[10px] text-amber-400 uppercase tracking-tighter">U17 National</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Témoignage 2 --}}
+                <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl relative">
+                    <div class="absolute -top-4 -right-4 w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500/20 text-4xl font-serif">“</div>
+                    <p class="text-slate-300 italic mb-6 text-sm leading-relaxed">
+                        "La page profil est un vrai plus. J'ai pu envoyer mon lien à plusieurs agents, c'est bien plus pro qu'une simple vidéo YouTube. Ça montre qu'on est sérieux sur son projet."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30"></div>
+                        <div>
+                            <p class="font-bold text-sm">Thomas D.</p>
+                            <p class="text-[10px] text-amber-400 uppercase tracking-tighter">Joueur Senior R1</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Témoignage 3 --}}
+                <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl relative">
+                    <div class="absolute -top-4 -right-4 w-12 h-12 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500/20 text-4xl font-serif">“</div>
+                    <p class="text-slate-300 italic mb-6 text-sm leading-relaxed">
+                        "Les articles sur les agents et l'entourage m'ont ouvert les yeux sur les coulisses. On ne nous dit pas tout en club, ici on a enfin la vérité sur le monde pro."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30"></div>
+                        <div>
+                            <p class="font-bold text-sm">Sofiane B.</p>
+                            <p class="text-[10px] text-amber-400 uppercase tracking-tighter">Entourage Joueur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{-- NEWSLETTER CTA --}}
+        @include('partials.newsletter-cta')
+
+        {{-- SECTION FAQ (Accordéon Premium) --}}
+        <section id="faq" class="max-w-4xl mx-auto px-4 py-16 lg:py-20 bff-reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-3">Questions fréquentes</h2>
+                <p class="text-sm text-slate-400">Tout ce que tu dois savoir sur Brain Focus Football.</p>
+            </div>
+
+            <div class="space-y-4" x-data="{ active: null }">
+                {{-- Question 1 --}}
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                    <button 
+                        @click="active !== 1 ? active = 1 : active = null" 
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                    >
+                        <span class="font-semibold text-sm sm:text-base pr-4">Est-ce que Brain Focus Football remplace un agent ?</span>
+                        <svg 
+                            class="w-5 h-5 text-amber-500 transition-transform duration-300" 
+                            :class="active === 1 ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div 
+                        x-show="active === 1" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="p-5 pt-0 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 bg-slate-900/20"
+                    >
+                        Non, nous ne sommes pas des agents. Nous sommes une plateforme d'accompagnement mental et de visibilité. Notre but est de te donner les outils pour que tu puisses gérer ta carrière toi-même ou avec ton entourage de manière pro, que tu aies déjà un agent ou non.
+                    </div>
+                </div>
+
+                {{-- Question 2 --}}
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                    <button 
+                        @click="active !== 2 ? active = 2 : active = null" 
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                    >
+                        <span class="font-semibold text-sm sm:text-base pr-4">À quel âge peut-on s'inscrire sur la plateforme ?</span>
+                        <svg 
+                            class="w-5 h-5 text-amber-500 transition-transform duration-300" 
+                            :class="active === 2 ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div 
+                        x-show="active === 2" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="p-5 pt-0 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 bg-slate-900/20"
+                    >
+                        La plateforme est optimisée pour les joueurs entre 12 et 23 ans. C'est la période charnière où le mental et la compréhension de l'écosystème font la plus grosse différence entre un joueur amateur et un futur pro.
+                    </div>
+                </div>
+
+                {{-- Question 3 --}}
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                    <button 
+                        @click="active !== 3 ? active = 3 : active = null" 
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                    >
+                        <span class="font-semibold text-sm sm:text-base pr-4">Combien coûte la création d'un profil joueur ?</span>
+                        <svg 
+                            class="w-5 h-5 text-amber-500 transition-transform duration-300" 
+                            :class="active === 3 ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div 
+                        x-show="active === 3" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="p-5 pt-0 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 bg-slate-900/20"
+                    >
+                        La création de ton profil joueur de base est entièrement gratuite. Nous voulons que chaque talent ait sa chance de se montrer. Des outils de coaching avancés et du contenu exclusif peuvent être proposés par la suite pour ceux qui veulent aller plus loin.
+                    </div>
+                </div>
+
+                {{-- Question 4 --}}
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                    <button 
+                        @click="active !== 4 ? active = 4 : active = null" 
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                    >
+                        <span class="font-semibold text-sm sm:text-base pr-4">Mon profil sera-t-il vraiment visible par des recruteurs ?</span>
+                        <svg 
+                            class="w-5 h-5 text-amber-500 transition-transform duration-300" 
+                            :class="active === 4 ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div 
+                        x-show="active === 4" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="p-5 pt-0 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 bg-slate-900/20"
+                    >
+                        Oui, nous travaillons à développer un réseau de partenaires qui consultent la base de données. Mais surtout, ton profil est conçu pour être ta "carte de visite digitale" : tu peux envoyer ton lien personnalisé directement aux clubs ou agents que tu sollicites.
+                    </div>
+                </div>
+
+                {{-- Question 5 --}}
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:border-amber-500/30">
+                    <button 
+                        @click="active !== 5 ? active = 5 : active = null" 
+                        class="w-full flex items-center justify-between p-5 text-left focus:outline-none"
+                    >
+                        <span class="font-semibold text-sm sm:text-base pr-4">Je suis un parent, quel est mon rôle ici ?</span>
+                        <svg 
+                            class="w-5 h-5 text-amber-500 transition-transform duration-300" 
+                            :class="active === 5 ? 'rotate-180' : ''"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div 
+                        x-show="active === 5" 
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="p-5 pt-0 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/50 bg-slate-900/20"
+                    >
+                        Votre rôle est crucial. Nous avons des contenus dédiés à l'entourage pour vous aider à accompagner votre enfant dans les moments de doute, de pression ou face aux choix de carrière, afin d'être un pilier solide sans devenir une source de stress supplémentaire.
+                    </div>
+                </div>
+            </div>
+        </section>
+
         {{-- CALL TO ACTION FINAL (reveal) --}}
+
         <section class="max-w-6xl mx-auto px-4 py-10 lg:py-14 bff-reveal">
             <div class="bg-gradient-to-r from-amber-600/20 via-amber-500/10 to-sky-500/10 border border-amber-500/30 rounded-3xl p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
                 <div>
@@ -495,3 +719,46 @@
     </footer>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- ANIMATION DES COMPTEURS ---
+        const counters = document.querySelectorAll('.bff-counter');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText.replace('%', '');
+                    const suffix = counter.getAttribute('data-suffix') || '';
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc) + suffix;
+                        setTimeout(updateCount, 15);
+                    } else {
+                        counter.innerText = target + suffix;
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        // Lancer l'animation quand la section devient visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.querySelector('.bff-counter').parentElement.parentElement.parentElement.parentElement;
+        observer.observe(statsSection);
+
+    });
+</script>
+@endpush

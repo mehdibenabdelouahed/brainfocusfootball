@@ -6,108 +6,7 @@
 <div class="min-h-screen bg-slate-950 text-white">
     
     {{-- NAVBAR --}}
-    <header class="py-2 border-b border-slate-800 bg-slate-950 sticky top-0 z-[1000]">
-        <div class="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
-            {{-- Logo --}}
-            <div class="flex items-center gap-3">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="/images/logoBFF.png" alt="Logo Brain Focus Football" class="w-14 h-14 object-contain">
-                    <div class="leading-tight text-sm">
-                        <p class="font-semibold text-[23px]">Brain Focus Football</p>
-                        <p class="text-[12px] text-slate-400">Les champions commencent par l'esprit</p>
-                    </div>
-                </a>
-            </div>
-
-            {{-- Desktop Nav --}}
-            <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="{{ route('articles.index') }}" class="hover:text-amber-400">Nos articles</a>
-                <a href="{{ route('player.profile') }}" class="hover:text-amber-400 text-amber-400">Nos talents</a>
-                <a href="{{ route('contact') }}" class="hover:text-amber-400">Contact</a>
-            </nav>
-
-            {{-- Auth Buttons / User Menu --}}
-            <div class="flex items-center gap-2 text-xs">
-                @auth
-                    {{-- Menu utilisateur connecté --}}
-                    <div class="relative">
-                        <button id="userMenuButton" type="button" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 transition">
-                            @if(Auth::user()->profile_photo)
-                                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-full object-cover">
-                            @else
-                                <div class="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-bold text-xs">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                </div>
-                            @endif
-                            <span class="text-slate-200">{{ Auth::user()->name }}</span>
-                            <svg id="userMenuIcon" class="w-4 h-4 text-slate-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        
-                        {{-- Dropdown menu --}}
-                        <div id="userMenuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-slate-800 border-2 border-amber-500/50 rounded-xl shadow-2xl" style="z-index: 9999;">
-                            <div class="py-2">
-                                <a href="{{ route('profile.show', Auth::id()) }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
-                                    Voir mon profil
-                                </a>
-                                <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm text-white hover:bg-amber-500/20 hover:text-amber-300 transition">
-                                    Éditer mon profil
-                                </a>
-                                @if(!Auth::user()->profile_completed)
-                                    <a href="{{ route('profile.create') }}" class="block px-4 py-3 text-sm text-amber-300 hover:bg-amber-500/20 transition font-semibold">
-                                        Compléter mon profil
-                                    </a>
-                                @endif
-                                <div class="border-t border-slate-600 my-2"></div>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition font-semibold">
-                                        Déconnexion
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        // Menu dropdown toggle
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const menuButton = document.getElementById('userMenuButton');
-                            const menuDropdown = document.getElementById('userMenuDropdown');
-                            const menuIcon = document.getElementById('userMenuIcon');
-
-                            if (menuButton && menuDropdown) {
-                                // Toggle menu on button click
-                                menuButton.addEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    menuDropdown.classList.toggle('hidden');
-                                    menuIcon.classList.toggle('rotate-180');
-                                });
-
-                                // Close menu when clicking outside
-                                document.addEventListener('click', function(e) {
-                                    if (!menuButton.contains(e.target) && !menuDropdown.contains(e.target)) {
-                                        menuDropdown.classList.add('hidden');
-                                        menuIcon.classList.remove('rotate-180');
-                                    }
-                                });
-                            }
-                        });
-                    </script>
-                @else
-                    <a href="{{ route('login') }}"
-                       class="px-3 py-1.5 rounded-full border border-slate-700 hover:border-amber-400 text-slate-200 hover:text-amber-300 transition">
-                        Connexion
-                    </a>
-                    <a href="{{ route('register') }}"
-                       class="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition bff-btn-main">
-                        Créer un profil
-                    </a>
-                @endauth
-            </div>
-        </div>
-    </header>
+    @include('partials.navbar')
 
     <div class="py-12 px-4">
     <div class="max-w-7xl mx-auto">
@@ -121,99 +20,172 @@
             </p>
         </div>
 
-        {{-- Grille de joueurs --}}
-        @if($players->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @foreach($players as $player)
-                    <div class="group bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10">
-                        {{-- Photo de profil --}}
-                        <div class="aspect-[4/3] overflow-hidden relative bg-slate-800">
-                            @if($player->profile_photo)
-                                <img src="{{ asset('storage/' . $player->profile_photo) }}" 
-                                     alt="{{ $player->first_name }} {{ $player->last_name }}" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center bg-slate-800 text-slate-600">
-                                    <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                    </svg>
-                                </div>
-                            @endif
-                            
-                            {{-- Badge Position --}}
-                            @if($player->position)
-                                <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-sm border border-slate-700 px-3 py-1 rounded-full">
-                                    <span class="text-xs font-bold text-amber-400">{{ $player->position }}</span>
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Informations --}}
-                        <div class="p-5">
-                            <h3 class="text-xl font-bold text-white mb-1 group-hover:text-amber-400 transition-colors">
-                                {{ $player->first_name }} {{ $player->last_name }}
-                            </h3>
-                            
-                            <div class="flex items-center gap-2 text-sm text-slate-400 mb-4">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-8a2 2 0 012-2h6.5l1 1H21l-3 6H5a2 2 0 00-2 2zm9-13.5V9"></path>
-                                </svg>
-                                <span>{{ $player->current_club ?? 'Sans club' }}</span>
-                            </div>
-
-                            {{-- Stats rapides --}}
-                            <div class="grid grid-cols-3 gap-2 mb-5 py-3 border-y border-slate-800">
-                                <div class="text-center">
-                                    <span class="block text-xs text-slate-500">Âge</span>
-                                    <span class="font-semibold text-slate-300">
-                                        {{ $player->date_of_birth ? \Carbon\Carbon::parse($player->date_of_birth)->age : '-' }}
-                                    </span>
-                                </div>
-                                <div class="text-center border-l border-slate-800">
-                                    <span class="block text-xs text-slate-500">Pied</span>
-                                    <span class="font-semibold text-slate-300">
-                                        {{ $player->preferred_foot ? substr($player->preferred_foot, 0, 1) : '-' }}
-                                    </span>
-                                </div>
-                                <div class="text-center border-l border-slate-800">
-                                    <span class="block text-xs text-slate-500">Taille</span>
-                                    <span class="font-semibold text-slate-300">
-                                        {{ $player->height ? $player->height . 'cm' : '-' }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {{-- Bouton --}}
-                            <a href="{{ route('profile.show', $player->id) }}" 
-                               class="block w-full py-2.5 text-center rounded-xl bg-slate-800 hover:bg-amber-500 text-slate-300 hover:text-slate-950 font-semibold transition-all duration-300">
-                                Voir le profil
-                            </a>
-                        </div>
+        {{-- Filtres --}}
+        <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 mb-10 bff-reveal">
+            <form action="{{ route('talents') }}" method="GET">
+                {{-- Barre de recherche --}}
+                <div class="mb-6">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        </span>
+                        <input type="text" name="search" value="{{ request('search') }}" 
+                            class="w-full bg-slate-800/50 border-slate-700 rounded-2xl py-3.5 pl-12 text-white placeholder-slate-500 focus:ring-amber-500 focus:border-amber-500 transition shadow-inner"
+                            placeholder="Rechercher un nom, un club...">
                     </div>
-                @endforeach
-            </div>
-
-            {{-- Pagination --}}
-            <div class="mt-12">
-                {{ $players->links() }}
-            </div>
-
-        @else
-            {{-- État vide --}}
-            <div class="text-center py-20 bg-slate-900/30 rounded-3xl border border-slate-800 border-dashed">
-                <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">Aucun joueur trouvé</h3>
-                <p class="text-slate-400 mb-6">Soyez le premier à créer votre profil !</p>
-                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition">
-                    Créer mon profil
-                </a>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                    {{-- Poste --}}
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Poste</label>
+                        <select name="position" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
+                            <option value="">Tous les postes</option>
+                            @foreach($positions as $pos)
+                                <option value="{{ $pos }}" {{ request('position') == $pos ? 'selected' : '' }}>{{ $pos }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Niveau --}}
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Niveau</label>
+                        <select name="level" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
+                            <option value="">Tous les niveaux</option>
+                            @foreach($levels as $lvl)
+                                <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>{{ $lvl }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Catégorie d'âge --}}
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Catégorie</label>
+                        <select name="age_group" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
+                            <option value="">Toutes les catégories</option>
+                            @foreach($ageGroups as $group)
+                                <option value="{{ $group }}" {{ request('age_group') == $group ? 'selected' : '' }}>{{ $group }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Bouton Filtrer --}}
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition shadow-lg shadow-amber-500/10 active:scale-95">
+                            Appliquer
+                        </button>
+                        @if(request()->anyFilled(['position', 'level', 'age_group', 'search']))
+                            <a href="{{ route('talents') }}" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl transition" title="Réinitialiser">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        {{-- Grille de joueurs (Conteneur AJAX) --}}
+        <div id="players-container" class="relative min-h-[400px]">
+            {{-- Loader --}}
+            <div id="loader" class="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl opacity-0 pointer-events-none transition-opacity duration-300">
+                <div class="flex flex-col items-center gap-4">
+                    <div class="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+                    <p class="text-amber-500 font-bold text-sm uppercase tracking-widest">Recherche...</p>
+                </div>
             </div>
-        @endif
+
+            <div id="grid-content">
+                @include('partials.player-grid')
+            </div>
+        </div>
     </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('form');
+    const container = document.getElementById('grid-content');
+    const loader = document.getElementById('loader');
+
+    const updateGrid = async (url) => {
+        loader.classList.remove('opacity-0', 'pointer-events-none');
+        
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            // Scroll en haut de la grille
+            document.getElementById('players-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Réattacher les événements de pagination
+            attachPaginationLinks();
+        } catch (error) {
+            console.error('Erreur lors du filtrage:', error);
+        } finally {
+            loader.classList.add('opacity-0', 'pointer-events-none');
+        }
+    };
+
+    const attachPaginationLinks = () => {
+        document.querySelectorAll('.ajax-pagination a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                updateGrid(this.href);
+                // Mettre à jour l'URL sans recharger
+                window.history.pushState({}, '', this.href);
+            });
+        });
+    };
+
+    // Déclencher le filtre au changement des selects
+    filterForm.querySelectorAll('select').forEach(select => {
+        select.addEventListener('change', function() {
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams(formData);
+            const url = `${window.location.pathname}?${params.toString()}`;
+            
+            updateGrid(url);
+            window.history.pushState({}, '', url);
+        });
+    });
+
+    // Recherche textuelle avec debounce
+    let timeout = null;
+    const searchInput = filterForm.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const formData = new FormData(filterForm);
+                const params = new URLSearchParams(formData);
+                const url = `${window.location.pathname}?${params.toString()}`;
+                
+                updateGrid(url);
+                window.history.pushState({}, '', url);
+            }, 500); // Attendre 500ms après la frappe
+        });
+    }
+
+    // Gérer le bouton filtrer (pour le mobile ou confirmation)
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams(formData);
+        const url = `${window.location.pathname}?${params.toString()}`;
+        
+        updateGrid(url);
+        window.history.pushState({}, '', url);
+    });
+
+    attachPaginationLinks();
+});
+</script>
+@endpush

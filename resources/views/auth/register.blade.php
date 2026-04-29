@@ -12,8 +12,10 @@
         <div class="text-center mb-8">
             <a href="{{ route('home') }}" class="inline-flex items-center gap-2 mb-4">
                 <img src="/images/logoBFF.png" alt="Logo Brain Focus Football" class="w-16 h-16 object-contain">
-
-        {{-- Carte d'inscription --}}
+            </a>
+            <h1 class="text-2xl font-bold">Rejoins la détection</h1>
+            <p class="text-slate-400 text-sm mt-1">Crée ton profil joueur en 2 minutes</p>
+        </div>
         <div class="relative">
             {{-- Glow effect --}}
             <div class="absolute -inset-1 bg-gradient-to-tr from-amber-500/30 via-sky-500/20 to-purple-500/30 rounded-2xl blur-xl opacity-50"></div>

@@ -225,10 +225,39 @@
                 </div>
             </div>
 
-            {{-- Section 5: Réseaux sociaux --}}
+            {{-- Section 5: Radar de performance --}}
+            <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
+                <h2 class="text-xl font-bold text-amber-400 mb-2 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">5</span>
+                    Radar de performance
+                </h2>
+                <p class="text-xs text-slate-400 mb-6 italic">Note-toi objectivement sur 10 pour chaque catégorie. Ton radar s'adaptera automatiquement.</p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach(['mental' => 'Mental', 'physique' => 'Physique', 'technique' => 'Technique', 'vitesse' => 'Vitesse', 'vision' => 'Vision', 'social' => 'Social'] as $key => $label)
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <label for="radar_{{ $key }}" class="text-sm font-semibold text-slate-200">{{ $label }}</label>
+                                <span id="val_{{ $key }}" class="text-sm font-black text-amber-500">{{ old('radar_'.$key, Auth::user()->{'radar_'.$key} ?? 5) }}/10</span>
+                            </div>
+                            <input type="range" id="radar_{{ $key }}" name="radar_{{ $key }}" 
+                                min="1" max="10" step="1" 
+                                value="{{ old('radar_'.$key, Auth::user()->{'radar_'.$key} ?? 5) }}"
+                                oninput="document.getElementById('val_{{ $key }}').innerText = this.value + '/10'"
+                                class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:ring-amber-500 transition-all">
+                            <div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-tighter">
+                                <span>Faible</span>
+                                <span>Élite</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Section 6: Réseaux sociaux --}}
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">5</span>
+                    <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">6</span>
                     Réseaux sociaux
                 </h2>
 

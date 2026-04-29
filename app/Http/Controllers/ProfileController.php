@@ -65,6 +65,14 @@ class ProfileController extends Controller
             
             // Métadonnées
             'is_public' => ['boolean'],
+
+            // Radar de performance
+            'radar_mental' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_physique' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_technique' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_vitesse' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_vision' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_social' => ['nullable', 'integer', 'min:1', 'max:10'],
         ]);
 
         $user = Auth::user();
@@ -140,6 +148,14 @@ class ProfileController extends Controller
             'season' => ['nullable', 'string', 'max:20'],
             'youtube_url' => ['nullable', 'url'],
             'is_public' => ['boolean'],
+
+            // Radar de performance
+            'radar_mental' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_physique' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_technique' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_vitesse' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_vision' => ['nullable', 'integer', 'min:1', 'max:10'],
+            'radar_social' => ['nullable', 'integer', 'min:1', 'max:10'],
         ]);
 
         $user = Auth::user();

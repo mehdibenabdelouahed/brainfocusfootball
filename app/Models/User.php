@@ -56,6 +56,14 @@ class User extends Authenticatable implements MustVerifyEmail
         // Métadonnées
         'profile_completed',
         'is_public',
+        'is_admin',
+        // Radar de performance
+        'radar_mental',
+        'radar_physique',
+        'radar_technique',
+        'radar_vitesse',
+        'radar_vision',
+        'radar_social',
     ];
 
     /**
@@ -85,6 +93,22 @@ class User extends Authenticatable implements MustVerifyEmail
             'achievements' => 'array',
             'profile_completed' => 'boolean',
             'is_public' => 'boolean',
+            'is_admin' => 'boolean',
+        ];
+    }
+
+    /**
+     * Retourne les données du radar (normalisées sur 100 pour le SVG)
+     */
+    public function getRadarDataAttribute(): array
+    {
+        return [
+            'Mental'    => ($this->radar_mental ?? 5) * 10,
+            'Physique'  => ($this->radar_physique ?? 5) * 10,
+            'Technique' => ($this->radar_technique ?? 5) * 10,
+            'Vitesse'   => ($this->radar_vitesse ?? 5) * 10,
+            'Vision'    => ($this->radar_vision ?? 5) * 10,
+            'Social'    => ($this->radar_social ?? 5) * 10,
         ];
     }
 }

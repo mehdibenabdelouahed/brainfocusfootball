@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-slate-300 font-sans selection:bg-amber-500/30">
+    @include('partials.navbar')
 
     {{-- GOOGLE FONTS LOADING --}}
     <style>

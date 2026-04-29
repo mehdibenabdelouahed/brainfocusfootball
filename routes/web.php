@@ -7,7 +7,6 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HowItWorksController;
 use Illuminate\Support\Facades\Route;
 
 // Home
@@ -35,31 +34,26 @@ Route::post('/email/verification-notification', [AuthController::class, 'resendV
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
-// Page liste des articles
+// Articles
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
-
-// Page article Nutrition
 Route::get('/articles/nutrition', function () {
     return view('articles.nutrition');
 })->name('articles.nutrition');
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
-// Profil joueur
-Route::get('/profil-joueur', [PlayerProfileController::class, 'index'])->middleware('auth')->name('player.profile');
+// Profil joueur (galerie publique)
+Route::get('/profil-joueur', [PlayerProfileController::class, 'index'])->name('talents');
 
-// Page Contact (Remplaçant Comment ça marche)
+// Page Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-// Debug route for PHP config
-Route::get('/debug-config', function () {
-    return [
-        'upload_max_filesize' => ini_get('upload_max_filesize'),
-        'post_max_size' => ini_get('post_max_size'),
-    ];
-});
+// Newsletter
+Route::post('/newsletter/subscribe', [App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 // Profile routes (protected by auth middleware)
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profil/creer', [ProfileController::class, 'create'])->name('profile.create');
     Route::post('/profil/creer', [ProfileController::class, 'store']);
     Route::get('/profil/editer', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -69,4 +63,10 @@ Route::middleware('auth')->group(function () {
 // Public profile view
 Route::get('/profil/{id}', [ProfileController::class, 'show'])->name('profile.show');
 
+// Comparateur
+Route::get('/comparateur', [PlayerProfileController::class, 'compare'])->name('compare');
 
+// Admin routes (protected by auth + admin middleware)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('articles', App\Http\Controllers\AdminArticleController::class);
+});
