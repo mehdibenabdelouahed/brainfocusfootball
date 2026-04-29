@@ -58,13 +58,10 @@
                             </a>
                         @endif
                         <div class="border-t border-slate-700 my-1"></div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="flex items-center gap-2 w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                Déconnexion
-                            </button>
-                        </form>
+                        <a href="{{ route('logout') }}" class="flex items-center gap-2 w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Déconnexion
+                        </a>
                     </div>
                 </div>
             @else
@@ -118,10 +115,9 @@
                 <a href="{{ route('dashboard') }}" class="block text-base text-slate-300 hover:text-amber-400 transition px-1">Tableau de bord</a>
                 <a href="{{ route('profile.show', Auth::id()) }}" class="block text-base text-slate-300 hover:text-amber-400 transition px-1">Voir mon profil</a>
                 <a href="{{ route('profile.edit') }}" class="block text-base text-slate-300 hover:text-amber-400 transition px-1">Éditer mon profil</a>
-                <form method="POST" action="{{ route('logout') }}" class="mt-2">
-                    @csrf
-                    <button type="submit" class="w-full py-3 text-left px-1 text-red-400 font-bold">Déconnexion</button>
-                </form>
+                <a href="{{ route('logout') }}" class="w-full py-3 text-left px-1 text-red-400 font-bold block">
+                    Déconnexion
+                </a>
             </div>
         @endauth
     </div>
