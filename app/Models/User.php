@@ -12,58 +12,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        // Informations personnelles
-        'first_name',
-        'last_name',
-        'date_of_birth',
-        'profile_photo',
-        'phone',
-        // Informations sportives
-        'position',
-        'preferred_foot',
-        'height',
-        'weight',
-        'current_club',
-        'level',
-        'jersey_number',
-        // Médias
-        'main_video_url',
-        'main_video_file',
-        'secondary_videos',
-        'photos',
-        // Profil
-        'bio',
-        'goals',
-        'achievements',
-        // Statistiques
-        'matches_played',
-        'goals_scored',
-        'assists',
-        'season',
-        // Réseaux sociaux
-        'instagram_url',
-        'tiktok_url',
-        'youtube_url',
-        // Métadonnées
-        'profile_completed',
-        'is_public',
-        'is_admin',
-        // Radar de performance
-        'radar_mental',
-        'radar_physique',
-        'radar_technique',
-        'radar_vitesse',
-        'radar_vision',
-        'radar_social',
+        'role',
     ];
 
     /**
@@ -86,29 +39,128 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'date_of_birth' => 'date',
-            'secondary_videos' => 'array',
-            'photos' => 'array',
-            'goals' => 'array',
-            'achievements' => 'array',
-            'profile_completed' => 'boolean',
-            'is_public' => 'boolean',
-            'is_admin' => 'boolean',
         ];
     }
 
-    /**
-     * Retourne les données du radar (normalisées sur 100 pour le SVG)
-     */
-    public function getRadarDataAttribute(): array
+    public function player()
     {
-        return [
-            'Mental'    => ($this->radar_mental ?? 5) * 10,
-            'Physique'  => ($this->radar_physique ?? 5) * 10,
-            'Technique' => ($this->radar_technique ?? 5) * 10,
-            'Vitesse'   => ($this->radar_vitesse ?? 5) * 10,
-            'Vision'    => ($this->radar_vision ?? 5) * 10,
-            'Social'    => ($this->radar_social ?? 5) * 10,
-        ];
+        return $this->hasOne(Player::class);
+    }
+
+    public function recruiter()
+    {
+        return $this->hasOne(Recruiter::class);
+    }
+
+    public function guardian()
+    {
+        return $this->hasOne(Guardian::class);
+    }
+
+    public function isPlayer(): bool
+    {
+        return $this->role === 'player';
+    }
+
+    public function isRecruiter(): bool
+    {
+        return $this->role === 'recruiter';
+    }
+
+    public function isGuardian(): bool
+    {
+        return $this->role === 'guardian';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function activeSubscription()
+    {
+        return $this->hasOne(Subscription::class)->where('status', 'active')->where(function ($query) {
+            $query->whereNull('ends_at')->orWhere('ends_at', '>', now());
+        })->latest();
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function hasActiveSubscription($planName = null)
+    {
+        $activeSub = $this->activeSubscription;
+        if (!$activeSub) return false;
+
+        if ($planName) {
+            return $activeSub->plan_name === $planName;
+        }
+
+        return true;
+    }
+
+    public function isPremium()
+    {
+        if ($this->role === 'player') {
+            return $this->hasActiveSubscription('PREMIUM');
+        }
+        return false;
+    }
+
+    public function recruiterPlan()
+    {
+        if ($this->role !== 'recruiter') return 'GRATUIT';
+
+        $activeSub = $this->activeSubscription;
+        return $activeSub ? $activeSub->plan_name : 'GRATUIT';
+    }
+
+    public function recruiterConversations()
+    {
+        return $this->hasMany(Conversation::class, 'recruiter_id');
+    }
+
+    public function playerConversations()
+    {
+        return $this->hasMany(Conversation::class, 'player_id');
+    }
+
+    public function getConversationsAttribute()
+    {
+        if ($this->role === 'recruiter') {
+            return $this->recruiterConversations;
+        } elseif ($this->role === 'player') {
+            return $this->playerConversations;
+        }
+        return collect();
+    }
+
+    public function canContactPlayer()
+    {
+        if ($this->role !== 'recruiter') return false;
+
+        $plan = $this->recruiterPlan();
+
+        if ($plan === 'GRATUIT') {
+            return false;
+        }
+
+        if (in_array($plan, ['PRO', 'ACADEMIE'])) {
+            return true; // Illimité
+        }
+
+        if ($plan === 'STANDARD') {
+            // Limite de 10 nouvelles conversations par mois
+            $conversationsThisMonth = $this->recruiterConversations()
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+            
+            return $conversationsThisMonth < 10;
+        }
+
+        return false;
     }
 }

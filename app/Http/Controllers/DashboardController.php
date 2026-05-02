@@ -12,19 +12,30 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->isRecruiter()) {
+            return view('dashboard.recruiter', compact('user'));
+        }
+
+        if ($user->role === 'guardian') {
+            return view('dashboard.guardian', compact('user'));
+        }
+
+        // Si le joueur vient d'être créé, il se peut qu'il n'y ait pas de player associé dans de très rares cas, mais la méthode register le crée.
+        $player = $user->player;
+
         // Calcul du pourcentage de complétion du profil
         $fields = [
-            'first_name', 'last_name', 'date_of_birth', 'profile_photo',
-            'position', 'preferred_foot', 'height', 'current_club',
-            'level', 'bio', 'main_video_url',
+            'date_of_birth', 'position', 'dominant_foot', 'height_cm', 'current_club',
         ];
         $filled = 0;
-        foreach ($fields as $field) {
-            if (!empty($user->$field)) {
-                $filled++;
+        if ($player) {
+            foreach ($fields as $field) {
+                if (!empty($player->$field)) {
+                    $filled++;
+                }
             }
         }
-        $completionPercent = (int) round(($filled / count($fields)) * 100);
+        $completionPercent = (int) round(($filled / max(1, count($fields))) * 100);
 
         // Articles recommandés selon le poste du joueur
         $positionCategories = [
@@ -34,12 +45,15 @@ class DashboardController extends Controller
             'Attaquant'  => 'Préparation mentale',
         ];
         $recommendedCategory = null;
-        foreach ($positionCategories as $key => $cat) {
-            if ($user->position && str_contains(strtolower($user->position), strtolower($key))) {
-                $recommendedCategory = $cat;
-                break;
+        if ($player && $player->position) {
+            foreach ($positionCategories as $key => $cat) {
+                if (str_contains(strtolower($player->position), strtolower($key))) {
+                    $recommendedCategory = $cat;
+                    break;
+                }
             }
         }
+        
         $articles = Article::published()
             ->when($recommendedCategory, fn($q) => $q->where('category', $recommendedCategory))
             ->latest('published_at')
@@ -50,6 +64,14 @@ class DashboardController extends Controller
             $articles = Article::published()->latest('published_at')->take(3)->get();
         }
 
-        return view('dashboard', compact('user', 'completionPercent', 'articles'));
+        // --- Analytiques d'audience (PREMIUM ONLY) ---
+        $viewsCount = 0;
+        $favoritedCount = 0;
+        if ($player && $user->isPremium()) {
+            $viewsCount = $player->profileViews()->count();
+            $favoritedCount = $player->favoritedBy()->count();
+        }
+
+        return view('dashboard.player', compact('user', 'player', 'completionPercent', 'articles', 'viewsCount', 'favoritedCount'));
     }
 }

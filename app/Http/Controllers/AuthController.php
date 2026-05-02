@@ -30,6 +30,16 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            // Check if user is banned
+            if (Auth::user()->banned_at) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return back()->withErrors([
+                    'email' => 'Votre compte a été suspendu par un administrateur.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('dashboard'));
@@ -54,24 +64,76 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
+            'role' => ['required', 'in:player,recruiter'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)],
             'first_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
-            'date_of_birth' => ['nullable', 'date'],
+            // Player fields
+            'date_of_birth' => ['nullable', 'required_if:role,player', 'date'],
             'position' => ['nullable', 'string', 'max:255'],
+            'guardian_email' => ['nullable', 'email'],
+            // Recruiter fields
+            'org_name' => ['nullable', 'required_if:role,recruiter', 'string', 'max:255'],
+            'license_number' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'], // The 'hashed' cast will hash this automatically
-            'first_name' => $validated['first_name'] ?? null,
-            'last_name' => $validated['last_name'] ?? null,
-            'date_of_birth' => $validated['date_of_birth'] ?? null,
-            'position' => $validated['position'] ?? null,
+            'role' => $validated['role'],
         ]);
+
+        if ($validated['role'] === 'player') {
+            $player = \App\Models\Player::create([
+                'user_id' => $user->id,
+                'date_of_birth' => $validated['date_of_birth'],
+                'position' => $validated['position'] ?? null,
+            ]);
+
+            // Vérifier si le joueur est mineur
+            $age = \Carbon\Carbon::parse($validated['date_of_birth'])->age;
+            if ($age < 18) {
+                // Création du compte tuteur (basique)
+                $tempPassword = \Illuminate\Support\Str::random(10);
+                
+                $guardianUser = User::firstOrCreate(
+                    ['email' => $validated['guardian_email']],
+                    [
+                        'name' => 'Tuteur de ' . $validated['name'],
+                        'password' => \Illuminate\Support\Facades\Hash::make($tempPassword),
+                        'role' => 'guardian',
+                    ]
+                );
+
+                $guardian = \App\Models\Guardian::create([
+                    'user_id' => $guardianUser->id,
+                    'player_id' => $player->id,
+                    'consent_given' => false,
+                ]);
+
+                $player->update(['guardian_id' => $guardian->id]);
+                
+                // Envoyer l'email au tuteur uniquement si le compte vient d'être créé
+                if ($guardianUser->wasRecentlyCreated) {
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($guardianUser->email)->send(
+                            new \App\Mail\GuardianAccountCreated($validated['name'], $guardianUser->email, $tempPassword)
+                        );
+                    } catch (\Exception $e) {
+                        \Illuminate\Support\Facades\Log::error('Erreur lors de l\'envoi de l\'email au tuteur: ' . $e->getMessage());
+                    }
+                }
+            }
+        } else if ($validated['role'] === 'recruiter') {
+            \App\Models\Recruiter::create([
+                'user_id' => $user->id,
+                'org_name' => $validated['org_name'],
+                'license_number' => $validated['license_number'] ?? null,
+            ]);
+        }
 
         Auth::login($user);
 
@@ -94,8 +156,12 @@ class AuthController extends Controller
         return redirect()->route('verification.notice')->with('success', 'Compte créé avec succès! Vérifiez votre email pour continuer.');
         */
 
-        // Redirection directe vers la page de création de profil
-        return redirect()->route('profile.create')->with('success', 'Compte créé avec succès! Complète maintenant ton profil joueur.');
+        // Redirection en fonction du rôle
+        if ($user->isPlayer()) {
+            return redirect()->route('profile.create')->with('success', 'Compte Joueur créé avec succès! Complète maintenant ton profil.');
+        } else {
+            return redirect()->route('dashboard')->with('success', 'Compte Recruteur créé en attente de validation.');
+        }
     }
 
     /**

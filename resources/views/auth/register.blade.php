@@ -34,32 +34,47 @@
                 @endif
 
                 {{-- Formulaire --}}
-                <form method="POST" action="{{ route('register') }}" class="space-y-6">
+                <form method="POST" action="{{ route('register') }}" class="space-y-6" id="registerForm">
                     @csrf
 
-                    {{-- Section 1: Informations de compte --}}
+                    {{-- Section 1: Rôle --}}
                     <div class="space-y-4">
                         <h3 class="text-lg font-semibold text-amber-400 flex items-center gap-2">
                             <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">1</span>
+                            Ton profil
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="role" value="player" class="peer sr-only" checked onchange="toggleRoleFields()">
+                                <div class="p-4 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition text-center">
+                                    <span class="block text-white font-semibold">Joueur</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="role" value="recruiter" class="peer sr-only" onchange="toggleRoleFields()">
+                                <div class="p-4 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 peer-checked:border-amber-500 peer-checked:bg-amber-500/10 transition text-center">
+                                    <span class="block text-white font-semibold">Recruteur</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- Séparateur --}}
+                    <div class="border-t border-slate-700"></div>
+
+                    {{-- Section 2: Informations de connexion --}}
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-amber-400 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">2</span>
                             Informations de compte
                         </h3>
 
                         {{-- Nom d'utilisateur --}}
                         <div>
                             <label for="name" class="block text-sm font-medium text-slate-300 mb-2">
-                                Nom d'utilisateur <span class="text-red-400">*</span>
+                                Nom d'utilisateur (Pseudo) <span class="text-red-400">*</span>
                             </label>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                value="{{ old('name') }}"
-                                required 
-                                autofocus
-                                class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                placeholder="Ex: Mehdi_BFF"
-                            >
-                            <p class="mt-1 text-xs text-slate-400">Ce nom sera visible publiquement</p>
+                            <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="Ex: Mehdi_BFF">
                         </div>
 
                         {{-- Email --}}
@@ -67,45 +82,18 @@
                             <label for="email" class="block text-sm font-medium text-slate-300 mb-2">
                                 Adresse email <span class="text-red-400">*</span>
                             </label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                value="{{ old('email') }}"
-                                required
-                                class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                placeholder="ton.email@exemple.com"
-                            >
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="ton.email@exemple.com">
                         </div>
 
                         {{-- Mot de passe --}}
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label for="password" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Mot de passe <span class="text-red-400">*</span>
-                                </label>
-                                <input 
-                                    type="password" 
-                                    id="password" 
-                                    name="password" 
-                                    required
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                    placeholder="••••••••"
-                                >
-                                <p class="mt-1 text-xs text-slate-400">Min. 8 caractères</p>
+                                <label for="password" class="block text-sm font-medium text-slate-300 mb-2">Mot de passe <span class="text-red-400">*</span></label>
+                                <input type="password" id="password" name="password" required class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="••••••••">
                             </div>
                             <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Confirmer le mot de passe <span class="text-red-400">*</span>
-                                </label>
-                                <input 
-                                    type="password" 
-                                    id="password_confirmation" 
-                                    name="password_confirmation" 
-                                    required
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                    placeholder="••••••••"
-                                >
+                                <label for="password_confirmation" class="block text-sm font-medium text-slate-300 mb-2">Confirmer le mot de passe <span class="text-red-400">*</span></label>
+                                <input type="password" id="password_confirmation" name="password_confirmation" required class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="••••••••">
                             </div>
                         </div>
                     </div>
@@ -113,79 +101,65 @@
                     {{-- Séparateur --}}
                     <div class="border-t border-slate-700"></div>
 
-                    {{-- Section 2: Informations de base --}}
+                    {{-- Section 3: Informations spécifiques --}}
                     <div class="space-y-4">
                         <h3 class="text-lg font-semibold text-amber-400 flex items-center gap-2">
-                            <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">2</span>
-                            Informations de base (optionnel)
+                            <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">3</span>
+                            Informations spécifiques
                         </h3>
-                        <p class="text-xs text-slate-400">Tu pourras compléter ton profil après l'inscription</p>
 
-                        {{-- Prénom et Nom --}}
+                        {{-- Champs communs Optionnels --}}
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label for="first_name" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Prénom
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="first_name" 
-                                    name="first_name" 
-                                    value="{{ old('first_name') }}"
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                    placeholder="Mehdi"
-                                >
+                                <label for="first_name" class="block text-sm font-medium text-slate-300 mb-2">Prénom</label>
+                                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
                             </div>
                             <div>
-                                <label for="last_name" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Nom
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="last_name" 
-                                    name="last_name" 
-                                    value="{{ old('last_name') }}"
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                    placeholder="Ben Abdelouahed"
-                                >
+                                <label for="last_name" class="block text-sm font-medium text-slate-300 mb-2">Nom</label>
+                                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
                             </div>
                         </div>
 
-                        {{-- Date de naissance et Poste --}}
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="date_of_birth" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Date de naissance
-                                </label>
-                                <input 
-                                    type="date" 
-                                    id="date_of_birth" 
-                                    name="date_of_birth" 
-                                    value="{{ old('date_of_birth') }}"
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                >
+                        {{-- Champs Joueur --}}
+                        <div id="playerFields" class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="date_of_birth" class="block text-sm font-medium text-slate-300 mb-2">Date de naissance <span class="text-red-400">*</span></label>
+                                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" onchange="checkAge()" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
+                                </div>
+                                <div>
+                                    <label for="position" class="block text-sm font-medium text-slate-300 mb-2">Poste principal</label>
+                                    <input type="text" id="position" name="position" value="{{ old('position') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="Ex: Ailier droit">
+                                </div>
                             </div>
-                            <div>
-                                <label for="position" class="block text-sm font-medium text-slate-300 mb-2">
-                                    Poste
+                            
+                            {{-- Champ Tuteur Légal (affiché dynamiquement) --}}
+                            <div id="guardianField" class="hidden p-4 rounded-xl border border-amber-500/30 bg-amber-500/5">
+                                <label for="guardian_email" class="block text-sm font-medium text-amber-400 mb-2">
+                                    <i class="fas fa-shield-alt mr-1"></i> Email du tuteur légal <span class="text-red-400">*</span>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    id="position" 
-                                    name="position" 
-                                    value="{{ old('position') }}"
-                                    class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                                    placeholder="Ex: Ailier droit, Meneur de jeu"
-                                >
+                                <p class="text-xs text-slate-400 mb-3">Conformément au RGPD, une autorisation d'un tuteur légal est requise pour les joueurs mineurs.</p>
+                                <input type="email" id="guardian_email" name="guardian_email" value="{{ old('guardian_email') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-amber-500/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="parent@exemple.com">
+                            </div>
+                        </div>
+
+                        {{-- Champs Recruteur --}}
+                        <div id="recruiterFields" class="space-y-4 hidden">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="org_name" class="block text-sm font-medium text-slate-300 mb-2">Club / Organisation <span class="text-red-400">*</span></label>
+                                    <input type="text" id="org_name" name="org_name" value="{{ old('org_name') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition" placeholder="Nom du club">
+                                </div>
+                                <div>
+                                    <label for="license_number" class="block text-sm font-medium text-slate-300 mb-2">Numéro de licence / Agent</label>
+                                    <input type="text" id="license_number" name="license_number" value="{{ old('license_number') }}" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {{-- Bouton d'inscription --}}
-                    <button 
-                        type="submit"
-                        class="w-full px-6 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/30 transition transform hover:scale-[1.02] active:scale-[0.98]"
-                    >
+                    <button type="submit" class="w-full px-6 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/30 transition transform hover:scale-[1.02] active:scale-[0.98]">
                         Créer mon compte
                     </button>
 
@@ -193,6 +167,60 @@
                         En créant un compte, tu acceptes nos conditions d'utilisation et notre politique de confidentialité.
                     </p>
                 </form>
+
+                <script>
+                    function toggleRoleFields() {
+                        const role = document.querySelector('input[name="role"]:checked').value;
+                        const playerFields = document.getElementById('playerFields');
+                        const recruiterFields = document.getElementById('recruiterFields');
+                        const dobInput = document.getElementById('date_of_birth');
+                        const orgInput = document.getElementById('org_name');
+                        
+                        if (role === 'player') {
+                            playerFields.classList.remove('hidden');
+                            recruiterFields.classList.add('hidden');
+                            dobInput.required = true;
+                            orgInput.required = false;
+                            checkAge();
+                        } else {
+                            playerFields.classList.add('hidden');
+                            recruiterFields.classList.remove('hidden');
+                            dobInput.required = false;
+                            orgInput.required = true;
+                            document.getElementById('guardianField').classList.add('hidden');
+                            document.getElementById('guardian_email').required = false;
+                        }
+                    }
+
+                    function checkAge() {
+                        const dobStr = document.getElementById('date_of_birth').value;
+                        if (!dobStr) return;
+                        
+                        const dob = new Date(dobStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - dob.getFullYear();
+                        const m = today.getMonth() - dob.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                            age--;
+                        }
+                        
+                        const guardianField = document.getElementById('guardianField');
+                        const guardianEmailInput = document.getElementById('guardian_email');
+                        
+                        if (age < 18) {
+                            guardianField.classList.remove('hidden');
+                            guardianEmailInput.required = true;
+                        } else {
+                            guardianField.classList.add('hidden');
+                            guardianEmailInput.required = false;
+                        }
+                    }
+
+                    // Run on init
+                    document.addEventListener('DOMContentLoaded', () => {
+                        toggleRoleFields();
+                    });
+                </script>
 
                 {{-- Séparateur --}}
                 <div class="relative my-6">

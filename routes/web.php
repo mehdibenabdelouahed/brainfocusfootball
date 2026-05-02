@@ -58,6 +58,33 @@ Route::middleware('auth')->group(function () {
     Route::post('/profil/creer', [ProfileController::class, 'store']);
     Route::get('/profil/editer', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profil/editer', [ProfileController::class, 'update']);
+    
+    // Routes Tuteur
+    Route::post('/guardian/approve', [\App\Http\Controllers\GuardianController::class, 'approveConsent'])->name('guardian.approve');
+    
+    // Espace Médical
+    Route::get('/medical/edit', [\App\Http\Controllers\MedicalDataController::class, 'edit'])->name('medical.edit');
+    Route::put('/medical/update', [\App\Http\Controllers\MedicalDataController::class, 'update'])->name('medical.update');
+
+    Route::post('/favorites/toggle', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
+
+    // Abonnements (Pricing & Checkout)
+    Route::get('/tarifs', [\App\Http\Controllers\SubscriptionController::class, 'pricing'])->name('pricing');
+    Route::get('/checkout', [\App\Http\Controllers\SubscriptionController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout/process', [\App\Http\Controllers\SubscriptionController::class, 'processCheckout'])->name('checkout.process');
+
+    // Administration
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+        Route::post('/users/{user}/ban', [\App\Http\Controllers\AdminController::class, 'banUser'])->name('users.ban');
+        Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unbanUser'])->name('users.unban');
+    });
+
+    // Messagerie Interne
+    Route::get('/messagerie', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+    Route::post('/messagerie/initiate/{player}', [\App\Http\Controllers\MessageController::class, 'initiate'])->name('messages.initiate');
 });
 
 // Public profile view

@@ -9,12 +9,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // On récupère quelques talents pour le bandeau défilant
-        $players = User::where('is_public', true)
-            ->whereNotNull('profile_photo')
-            ->inRandomOrder()
-            ->limit(12)
-            ->get();
+        $players = User::whereHas('player', function ($q) {
+            $q->where('visibility', 'public')->whereNotNull('profile_photo');
+        })->with('player')
+          ->inRandomOrder()
+          ->limit(12)
+          ->get();
 
         return view('home', compact('players'));
     }

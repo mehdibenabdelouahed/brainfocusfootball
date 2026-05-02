@@ -3,15 +3,17 @@
 @section('title', $user->name . ' - Profil Joueur')
 
 @section('meta')
-    <meta name="description" content="Découvrez le profil de {{ $user->name }}, {{ $user->position }} sur Brain Focus Football.">
-    <meta property="og:title" content="{{ $user->name }} - Profil Joueur | BFF">
-    <meta property="og:description" content="{{ $user->position }} • {{ $user->current_club ?? 'Sans club' }} • {{ $user->level }}">
-    <meta property="og:image" content="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : asset('images/logo.png') }}">
+    @php $player = $user->player; @endphp
+    <meta name="description" content="Découvrez le profil de {{ $player?->first_name ?? $user->name }}, {{ $player?->position }} sur Brain Focus Football.">
+    <meta property="og:title" content="{{ $player?->first_name ?? $user->name }} - Profil Joueur | BFF">
+    <meta property="og:description" content="{{ $player?->position }} • {{ $player?->current_club ?? 'Sans club' }} • {{ $player?->level }}">
+    <meta property="og:image" content="{{ $player?->profile_photo ? asset('storage/' . $player->profile_photo) : asset('images/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="profile">
 @endsection
 
 @section('content')
+@php $player = $user->player; @endphp
 <div class="min-h-screen bg-slate-950 text-white px-2 sm:px-4 py-8 sm:py-12">
     <div class="max-w-4xl mx-auto">
         {{-- Bouton retour --}}
@@ -26,28 +28,66 @@
                 <div class="flex flex-col md:flex-row gap-6 mb-8">
                     {{-- Photo de profil --}}
                     <div class="flex-shrink-0">
-                        @if($user->profile_photo)
-                            <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-2xl object-cover border-2 border-amber-500/50">
+                        @if($player?->profile_photo)
+                            <img src="{{ asset('storage/' . $player->profile_photo) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-2xl object-cover border-2 border-amber-500/50">
                         @else
                             <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-5xl border-2 border-amber-500/50">
-                                {{ substr($user->name, 0, 1) }}
+                                {{ substr($player?->first_name ?? $user->name, 0, 1) }}
                             </div>
                         @endif
                     </div>
 
                     {{-- Infos principales --}}
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold mb-2">{{ $user->first_name ?? $user->name }} {{ $user->last_name }}</h1>
-                        @if($user->position)
-                            <p class="text-amber-400 text-lg mb-3">{{ $user->position }}</p>
+                        <h1 class="text-3xl font-bold mb-2">{{ $player?->first_name ?? $user->name }} {{ $player?->last_name }}</h1>
+                        @if($player?->position)
+                            <p class="text-amber-400 text-lg mb-3">{{ $player->position }}</p>
                         @endif
-                        @if($user->current_club || $user->level)
+                        @if($player?->current_club || $player?->level)
                             <p class="text-slate-300 mb-4">
-                                @if($user->current_club){{ $user->current_club }}@endif
-                                @if($user->current_club && $user->level) • @endif
-                                @if($user->level){{ $user->level }}@endif
+                                @if($player?->current_club){{ $player->current_club }}@endif
+                                @if($player?->current_club && $player?->level) • @endif
+                                @if($player?->level){{ $player->level }}@endif
                             </p>
                         @endif
+
+                        {{-- Bouton "Contacter" pour les Recruteurs --}}
+                        @auth
+                            @if(Auth::user()->isRecruiter())
+                                <div class="mt-4">
+                                    @php
+                                        $canContact = Auth::user()->canContactPlayer();
+                                        $plan = Auth::user()->recruiterPlan();
+                                        $existingConv = \App\Models\Conversation::where('recruiter_id', Auth::id())->where('player_id', $user->id)->first();
+                                    @endphp
+                                    
+                                    @if($existingConv)
+                                        <a href="{{ route('messages.show', $existingConv->id) }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500/20 hover:bg-amber-500 text-amber-400 hover:text-slate-950 border border-amber-500/40 rounded-xl font-bold text-sm transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                                            Voir la conversation
+                                        </a>
+                                    @elseif($canContact)
+                                        <form action="{{ route('messages.initiate', $user->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl font-bold text-sm transition">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                                Contacter ce joueur
+                                            </button>
+                                        </form>
+                                    @elseif($plan === 'GRATUIT')
+                                        <a href="{{ route('pricing') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-400 rounded-xl font-semibold text-sm transition">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                            S'abonner pour contacter
+                                        </a>
+                                    @else
+                                        <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 border border-slate-700 text-slate-500 rounded-xl font-semibold text-sm cursor-not-allowed" title="Quota mensuel atteint (10 contacts pour Standard)">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                            Quota mensuel atteint
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        @endauth
 
                         {{-- Partage du profil --}}
                         <div class="mt-6 pt-6 border-t border-slate-800/50">
@@ -68,58 +108,58 @@
 
                 {{-- Informations détaillées --}}
                 <div class="grid md:grid-cols-4 gap-4 mb-8">
-                    @if($user->date_of_birth)
+                    @if($player?->date_of_birth)
                         <div class="bg-slate-800/50 rounded-xl p-4">
                             <p class="text-slate-400 text-xs mb-1">Âge</p>
-                            <p class="font-semibold">{{ \Carbon\Carbon::parse($user->date_of_birth)->age }} ans</p>
+                            <p class="font-semibold">{{ \Carbon\Carbon::parse($player->date_of_birth)->age }} ans</p>
                         </div>
                     @endif
-                    @if($user->height)
+                    @if($player?->height_cm)
                         <div class="bg-slate-800/50 rounded-xl p-4">
                             <p class="text-slate-400 text-xs mb-1">Taille</p>
-                            <p class="font-semibold">{{ $user->height }} cm</p>
+                            <p class="font-semibold">{{ $player->height_cm }} cm</p>
                         </div>
                     @endif
-                    @if($user->weight)
+                    @if($player?->weight_kg)
                         <div class="bg-slate-800/50 rounded-xl p-4">
                             <p class="text-slate-400 text-xs mb-1">Poids</p>
-                            <p class="font-semibold">{{ $user->weight }} kg</p>
+                            <p class="font-semibold">{{ $player->weight_kg }} kg</p>
                         </div>
                     @endif
-                    @if($user->preferred_foot)
+                    @if($player?->dominant_foot)
                         <div class="bg-slate-800/50 rounded-xl p-4">
                             <p class="text-slate-400 text-xs mb-1">Pied fort</p>
-                            <p class="font-semibold">{{ $user->preferred_foot }}</p>
+                            <p class="font-semibold">{{ $player->dominant_foot }}</p>
                         </div>
                     @endif
-                    @if($user->jersey_number)
+                    @if($player?->jersey_number)
                         <div class="bg-slate-800/50 rounded-xl p-4">
                             <p class="text-slate-400 text-xs mb-1">Numéro</p>
-                            <p class="font-semibold">{{ $user->jersey_number }}</p>
+                            <p class="font-semibold">{{ $player->jersey_number }}</p>
                         </div>
                     @endif
                 </div>
 
                 {{-- Statistiques --}}
-                @if($user->season || $user->matches_played || $user->goals_scored || $user->assists)
+                @if($player?->season || $player?->matches_played || $player?->goals_scored || $player?->assists)
                     <div class="mb-8">
-                        <h2 class="text-xl font-bold text-amber-400 mb-4">Statistiques {{ $user->season }}</h2>
+                        <h2 class="text-xl font-bold text-amber-400 mb-4">Statistiques {{ $player->season }}</h2>
                         <div class="grid grid-cols-3 gap-4">
-                            @if($user->matches_played)
+                            @if($player?->matches_played)
                                 <div class="bg-slate-800/50 rounded-xl p-4 text-center">
-                                    <p class="text-3xl font-bold text-amber-400">{{ $user->matches_played }}</p>
+                                    <p class="text-3xl font-bold text-amber-400">{{ $player->matches_played }}</p>
                                     <p class="text-slate-400 text-sm mt-1">Matchs</p>
                                 </div>
                             @endif
-                            @if($user->goals_scored)
+                            @if($player?->goals_scored)
                                 <div class="bg-slate-800/50 rounded-xl p-4 text-center">
-                                    <p class="text-3xl font-bold text-amber-400">{{ $user->goals_scored }}</p>
+                                    <p class="text-3xl font-bold text-amber-400">{{ $player->goals_scored }}</p>
                                     <p class="text-slate-400 text-sm mt-1">Buts</p>
                                 </div>
                             @endif
-                            @if($user->assists)
+                            @if($player?->assists)
                                 <div class="bg-slate-800/50 rounded-xl p-4 text-center">
-                                    <p class="text-3xl font-bold text-amber-400">{{ $user->assists }}</p>
+                                    <p class="text-3xl font-bold text-amber-400">{{ $player->assists }}</p>
                                     <p class="text-slate-400 text-sm mt-1">Passes D.</p>
                                 </div>
                             @endif
@@ -156,13 +196,20 @@
                                 
                                 {{-- Data Polygon --}}
                                 @php
-                                    $values = array_values($user->radar_data);
+                                    $values = $player ? [
+                                        $player->radar_mental ?? 5,
+                                        $player->radar_physique ?? 5,
+                                        $player->radar_technique ?? 5,
+                                        $player->radar_vitesse ?? 5,
+                                        $player->radar_vision ?? 5,
+                                        $player->radar_social ?? 5
+                                    ] : [5, 5, 5, 5, 5, 5];
                                     $n = count($values);
                                     $cx = 50; $cy = 50; $maxR = 40;
                                     $pts = [];
                                     for ($i = 0; $i < $n; $i++) {
                                         $angle = (M_PI * 2 / $n) * $i - M_PI / 2;
-                                        $pct = $values[$i] / 100;
+                                        $pct = ($values[$i] * 10) / 100;
                                         $pts[] = ($cx + $maxR * $pct * cos($angle)) . ',' . ($cy + $maxR * $pct * sin($angle));
                                     }
                                     $polygonPoints = implode(' ', $pts);
@@ -195,40 +242,40 @@
                                 <div class="flex flex-col">
                                     <div class="flex justify-between items-end mb-1">
                                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ $label }}</span>
-                                        <span class="text-sm font-black text-amber-500">{{ $user->{'radar_'.$key} ?? 0 }}/10</span>
+                                        <span class="text-sm font-black text-amber-500">{{ $player?->{'radar_'.$key} ?? 0 }}/10</span>
                                     </div>
                                     <div class="h-1 w-full bg-slate-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-amber-500" style="width: {{ ($user->{'radar_'.$key} ?? 0) * 10 }}%"></div>
+                                        <div class="h-full bg-amber-500" style="width: {{ ($player?->{'radar_'.$key} ?? 0) * 10 }}%"></div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
-                @if($user->bio)
+                @if($player?->bio)
                     <div class="mb-8">
                         <h2 class="text-xl font-bold text-amber-400 mb-3">À propos</h2>
-                        <p class="text-slate-300 leading-relaxed">{{ $user->bio }}</p>
+                        <p class="text-slate-300 leading-relaxed">{{ $player->bio }}</p>
                     </div>
                 @endif
 
                 {{-- Vidéo principale --}}
-                @if($user->main_video_file || $user->main_video_url)
+                @if($player?->main_video_file || $player?->main_video_url)
                     <div class="mb-8">
                         <h2 class="text-xl font-bold text-amber-400 mb-3">Vidéo principale</h2>
                         <div class="aspect-video rounded-xl overflow-hidden bg-slate-800">
-                            @if($user->main_video_file)
+                            @if($player?->main_video_file)
                                 <video controls class="w-full h-full object-contain bg-black">
-                                    <source src="{{ asset('storage/' . $user->main_video_file) }}">
+                                    <source src="{{ asset('storage/' . $player->main_video_file) }}">
                                     Votre navigateur ne supporte pas la lecture de vidéos.
                                 </video>
-                            @elseif($user->main_video_url)
-                                @if(str_contains($user->main_video_url, 'youtube.com') || str_contains($user->main_video_url, 'youtu.be'))
+                            @elseif($player?->main_video_url)
+                                @if(str_contains($player->main_video_url, 'youtube.com') || str_contains($player->main_video_url, 'youtu.be'))
                                     @php
                                         $videoId = null;
-                                        if (preg_match('/youtube\.com\/watch\?v=([^&]+)/', $user->main_video_url, $matches)) {
+                                        if (preg_match('/youtube\.com\/watch\?v=([^&]+)/', $player->main_video_url, $matches)) {
                                             $videoId = $matches[1];
-                                        } elseif (preg_match('/youtu\.be\/([^?]+)/', $user->main_video_url, $matches)) {
+                                        } elseif (preg_match('/youtu\.be\/([^?]+)/', $player->main_video_url, $matches)) {
                                             $videoId = $matches[1];
                                         }
                                     @endphp
@@ -237,7 +284,7 @@
                                     @endif
                                 @else
                                     <video controls class="w-full h-full object-cover">
-                                        <source src="{{ $user->main_video_url }}" type="video/mp4">
+                                        <source src="{{ $player->main_video_url }}" type="video/mp4">
                                     </video>
                                 @endif
                             @endif

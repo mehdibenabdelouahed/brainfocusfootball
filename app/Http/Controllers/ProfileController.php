@@ -77,19 +77,16 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->isPlayer()) {
+            return redirect()->route('dashboard')->withErrors(['error' => 'Seuls les joueurs peuvent compléter un profil sportif.']);
+        }
+
+        $player = $user->player ?? \App\Models\Player::create(['user_id' => $user->id]);
+
         // Upload de la photo de profil
         if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $validated['profile_photo'] = $path;
-        }
-
-        // Upload des photos
-        if ($request->hasFile('photos')) {
-            $photoPaths = [];
-            foreach ($request->file('photos') as $photo) {
-                $photoPaths[] = $photo->store('player_photos', 'public');
-            }
-            $validated['photos'] = $photoPaths;
         }
 
         // Upload de la vidéo principale
@@ -103,7 +100,21 @@ class ProfileController extends Controller
         // Marquer le profil comme complété
         $validated['profile_completed'] = true;
 
-        $user->update($validated);
+        // RGPD & Consentement
+        $isPublic = $request->has('is_public') ? $request->boolean('is_public') : true;
+        $age = \Carbon\Carbon::parse($validated['date_of_birth'] ?? now())->age;
+        
+        if ($age < 18 && $isPublic) {
+            $guardian = $user->guardian;
+            if (!$guardian || !$guardian->consent_given) {
+                $isPublic = false;
+            }
+        }
+        
+        $validated['visibility'] = $isPublic ? 'public' : 'private';
+        unset($validated['is_public']); // Pas dans la table players
+
+        $player->update($validated);
 
         return redirect()->route('profile.show', $user->id)->with('success', 'Profil créé avec succès!');
     }
@@ -160,11 +171,17 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
+        if (!$user->isPlayer()) {
+            return redirect()->route('dashboard')->withErrors(['error' => 'Seuls les joueurs peuvent avoir un profil sportif.']);
+        }
+
+        $player = $user->player ?? \App\Models\Player::create(['user_id' => $user->id]);
+
         // Upload de la photo de profil
         if ($request->hasFile('profile_photo')) {
             // Supprimer l'ancienne photo si elle existe
-            if ($user->profile_photo) {
-                Storage::disk('public')->delete($user->profile_photo);
+            if ($player->profile_photo) {
+                Storage::disk('public')->delete($player->profile_photo);
             }
             $path = $request->file('profile_photo')->store('profile_photos', 'public');
             $validated['profile_photo'] = $path;
@@ -173,8 +190,8 @@ class ProfileController extends Controller
         // Upload de la vidéo principale
         if ($request->hasFile('main_video_file')) {
             // Supprimer l'ancienne vidéo si elle existe
-            if ($user->main_video_file) {
-                Storage::disk('public')->delete($user->main_video_file);
+            if ($player->main_video_file) {
+                Storage::disk('public')->delete($player->main_video_file);
             }
             $path = $request->file('main_video_file')->store('player_videos', 'public');
             if ($path && Storage::disk('public')->exists($path)) {
@@ -182,7 +199,21 @@ class ProfileController extends Controller
             }
         }
 
-        $user->update($validated);
+        // RGPD & Consentement
+        $isPublic = $request->has('is_public') ? $request->boolean('is_public') : true;
+        $age = \Carbon\Carbon::parse($validated['date_of_birth'] ?? $player->date_of_birth ?? now())->age;
+        
+        if ($age < 18 && $isPublic) {
+            $guardian = $user->guardian;
+            if (!$guardian || !$guardian->consent_given) {
+                $isPublic = false;
+            }
+        }
+
+        $validated['visibility'] = $isPublic ? 'public' : 'private';
+        unset($validated['is_public']); // Pas dans la table players
+
+        $player->update($validated);
 
         return redirect()->route('profile.edit')->with('success', 'Profil mis à jour avec succès!');
     }
@@ -194,9 +225,39 @@ class ProfileController extends Controller
     {
         $user = User::findOrFail($id);
 
+        $player = $user->player;
+        $isPublic = $player ? ($player->visibility === 'public') : ($user->is_public ?? true);
+
         // Vérifier si le profil est public ou si c'est le propriétaire
-        if (!$user->is_public && (!Auth::check() || Auth::id() !== $user->id)) {
+        if (!$isPublic && (!Auth::check() || Auth::id() !== $user->id)) {
             abort(403, 'Ce profil est privé.');
+        }
+
+        // Enregistrer la vue du profil (si ce n'est pas le propriétaire)
+        if ($player && (!Auth::check() || Auth::id() !== $user->id)) {
+            $viewerId = Auth::id();
+            $viewerRole = Auth::check() && Auth::user()->isRecruiter() ? 'recruiter' : (Auth::check() ? 'user' : 'guest');
+            
+            // Éviter les doublons dans la même heure par la même IP / Utilisateur
+            $recentView = \App\Models\ProfileView::where('player_id', $player->id)
+                ->where(function ($query) use ($viewerId) {
+                    if ($viewerId) {
+                        $query->where('viewer_id', $viewerId);
+                    } else {
+                        $query->where('ip_address', request()->ip());
+                    }
+                })
+                ->where('created_at', '>=', now()->subHour())
+                ->first();
+
+            if (!$recentView) {
+                \App\Models\ProfileView::create([
+                    'player_id' => $player->id,
+                    'viewer_id' => $viewerId,
+                    'viewer_role' => $viewerRole,
+                    'ip_address' => request()->ip(),
+                ]);
+            }
         }
 
         return view('profile.show', compact('user'));

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('main_video_file')->nullable()->after('main_video_url');
+            $table->timestamp('banned_at')->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('main_video_file');
+            $table->dropColumn('banned_at');
         });
     }
 };
