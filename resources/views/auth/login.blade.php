@@ -10,8 +10,8 @@
 
         {{-- Logo et titre --}}
         <div class="text-center mb-8">
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2 mb-4">
-                <img src="/images/logoBFF.png" alt="Logo Brain Focus Football" class="w-16 h-16 object-contain">
+            <a href="{{ route('home') }}" class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase select-none transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] inline-block mb-4">
+                <span class="text-amber-500">BRAIN</span><span class="text-white">FOCUS</span>
             </a>
             <h1 class="text-3xl font-bold mb-2">Connexion</h1>
             <p class="text-slate-400 text-sm">Accédez à votre profil joueur</p>

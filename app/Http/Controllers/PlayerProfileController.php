@@ -84,13 +84,42 @@ class PlayerProfileController extends Controller
         $levels = ['Régional', 'National', 'Élite', 'Académie'];
         $ageGroups = ['U15', 'U17', 'U19', 'Senior'];
 
+        // Informations de quota pour l'affichage dans la vue
+        $quotaInfo = null;
+        if (Auth::check() && Auth::user()->isRecruiter()) {
+            $user = Auth::user();
+            $limit = $user->getProfileViewLimit();
+            $used = $user->monthlyProfileViewCount();
+            $quotaInfo = [
+                'limit' => $limit,
+                'used' => $used,
+                'remaining' => $limit !== null ? max(0, $limit - $used) : null,
+                'plan' => $user->recruiterPlan(),
+            ];
+        }
+
         return $request->ajax() 
             ? view('partials.player-grid', compact('players'))->render()
-            : view('player-profile', compact('players', 'positions', 'levels', 'ageGroups'));
+            : view('player-profile', compact('players', 'positions', 'levels', 'ageGroups', 'quotaInfo'));
     }
 
     public function compare(Request $request)
     {
+        // Double vérification serveur (en plus du middleware route)
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Connectez-vous pour utiliser le comparateur.');
+        }
+
+        if (!Auth::user()->isRecruiter()) {
+            abort(403, 'Le comparateur est réservé aux recruteurs.');
+        }
+
+        if (!in_array(Auth::user()->recruiterPlan(), ['STANDARD', 'PRO', 'ACADEMIE'])) {
+            return redirect()->route('pricing')->with('error',
+                'Le comparateur est disponible à partir du plan Standard. Mettez à niveau votre abonnement.'
+            );
+        }
+
         $ids = explode(',', $request->ids);
         $players = User::whereIn('id', $ids)->get();
 

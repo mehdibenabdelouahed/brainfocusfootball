@@ -233,6 +233,23 @@ class ProfileController extends Controller
             abort(403, 'Ce profil est privé.');
         }
 
+        // ══════════════════════════════════════════════════════
+        // CONTRÔLE DES QUOTAS — Recruteurs
+        // ══════════════════════════════════════════════════════
+        if (Auth::check() && Auth::user()->isRecruiter() && $player) {
+            $viewer = Auth::user();
+
+            if (!$viewer->canViewProfile($player->id)) {
+                $limit = $viewer->getProfileViewLimit();
+                $plan = $viewer->recruiterPlan();
+
+                return redirect()->route('pricing')->with('error',
+                    "Vous avez atteint votre limite de {$limit} profils consultés ce mois-ci (plan {$plan}). " .
+                    "Passez à un plan supérieur pour consulter plus de profils."
+                );
+            }
+        }
+
         // Enregistrer la vue du profil (si ce n'est pas le propriétaire)
         if ($player && (!Auth::check() || Auth::id() !== $user->id)) {
             $viewerId = Auth::id();

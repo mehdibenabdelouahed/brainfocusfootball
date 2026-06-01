@@ -30,6 +30,44 @@
     @stack('styles')
 </head>
 <body x-data="compareSystem()" @toggle-compare.window="toggle($event.detail)" class="antialiased bg-slate-950 text-white min-h-screen">
+    {{-- Notifications flash globales --}}
+    @if(session('error'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 6000)"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-[-1rem]"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 translate-y-[-1rem]"
+             class="fixed top-4 left-1/2 -translate-x-1/2 z-[999] max-w-lg w-full px-4">
+            <div class="bg-red-500/10 border border-red-500/40 backdrop-blur-lg rounded-xl p-4 flex items-start gap-3 shadow-2xl">
+                <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                <p class="text-sm text-red-300 flex-1">{{ session('error') }}</p>
+                <button @click="show = false" class="text-red-400 hover:text-red-300 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+    @endif
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-[-1rem]"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 translate-y-[-1rem]"
+             class="fixed top-4 left-1/2 -translate-x-1/2 z-[999] max-w-lg w-full px-4">
+            <div class="bg-emerald-500/10 border border-emerald-500/40 backdrop-blur-lg rounded-xl p-4 flex items-start gap-3 shadow-2xl">
+                <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <p class="text-sm text-emerald-300 flex-1">{{ session('success') }}</p>
+                <button @click="show = false" class="text-emerald-400 hover:text-emerald-300 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+    @endif
+
     @yield('content')
 
     @include('partials.compare-bar')

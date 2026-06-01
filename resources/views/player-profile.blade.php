@@ -20,6 +20,48 @@
             </p>
         </div>
 
+        {{-- Bandeau de quota pour les recruteurs --}}
+        @if(isset($quotaInfo) && $quotaInfo)
+            <div class="mb-6 bg-slate-900/60 border rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4
+                {{ $quotaInfo['remaining'] === null ? 'border-emerald-500/30' : ($quotaInfo['remaining'] > 5 ? 'border-sky-500/30' : ($quotaInfo['remaining'] > 0 ? 'border-amber-500/30' : 'border-red-500/30')) }}">
+                <div class="flex items-center gap-3">
+                    @if($quotaInfo['remaining'] === null)
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-emerald-400">Plan {{ $quotaInfo['plan'] }} — Consultations illimitées</p>
+                        </div>
+                    @elseif($quotaInfo['remaining'] > 0)
+                        <div class="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-white">
+                                <span class="{{ $quotaInfo['remaining'] > 5 ? 'text-sky-400' : 'text-amber-400' }}">{{ $quotaInfo['remaining'] }}</span> 
+                                consultation{{ $quotaInfo['remaining'] > 1 ? 's' : '' }} restante{{ $quotaInfo['remaining'] > 1 ? 's' : '' }} ce mois
+                                <span class="text-slate-500">({{ $quotaInfo['used'] }}/{{ $quotaInfo['limit'] }})</span>
+                            </p>
+                            <p class="text-[10px] text-slate-500">Plan {{ $quotaInfo['plan'] }}</p>
+                        </div>
+                    @else
+                        <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-red-400">Quota mensuel atteint ({{ $quotaInfo['used'] }}/{{ $quotaInfo['limit'] }})</p>
+                            <p class="text-[10px] text-slate-500">Plan {{ $quotaInfo['plan'] }} — Passez au plan supérieur pour plus de consultations</p>
+                        </div>
+                    @endif
+                </div>
+                @if($quotaInfo['remaining'] !== null)
+                    <a href="{{ route('pricing') }}" class="px-4 py-2 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition whitespace-nowrap active:scale-95">
+                        Augmenter mon quota
+                    </a>
+                @endif
+            </div>
+        @endif
+
         {{-- Filtres --}}
         <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 mb-10 bff-reveal">
             <form action="{{ route('talents') }}" method="GET">

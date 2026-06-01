@@ -163,4 +163,59 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return false;
     }
+
+    /**
+     * Retourne la limite de profils consultables par mois selon le plan recruteur.
+     * null = illimité
+     */
+    public function getProfileViewLimit(): ?int
+    {
+        if ($this->role !== 'recruiter') return null;
+
+        $plan = $this->recruiterPlan();
+
+        return match ($plan) {
+            'GRATUIT' => 5,
+            'STANDARD' => 50,
+            'PRO', 'ACADEMIE' => null, // Illimité
+            default => 5,
+        };
+    }
+
+    /**
+     * Compte le nombre de profils uniques consultés ce mois-ci par ce recruteur.
+     */
+    public function monthlyProfileViewCount(): int
+    {
+        return \App\Models\ProfileView::where('viewer_id', $this->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->distinct('player_id')
+            ->count('player_id');
+    }
+
+    /**
+     * Vérifie si le recruteur peut encore consulter un profil ce mois-ci.
+     */
+    public function canViewProfile(int $playerId = null): bool
+    {
+        if ($this->role !== 'recruiter') return true; // Les joueurs et guardians peuvent voir sans limite
+
+        $limit = $this->getProfileViewLimit();
+
+        if ($limit === null) return true; // Illimité
+
+        // Si le recruteur a déjà consulté ce profil ce mois-ci, ça ne compte pas comme nouveau
+        if ($playerId) {
+            $alreadyViewed = \App\Models\ProfileView::where('viewer_id', $this->id)
+                ->where('player_id', $playerId)
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->exists();
+
+            if ($alreadyViewed) return true;
+        }
+
+        return $this->monthlyProfileViewCount() < $limit;
+    }
 }

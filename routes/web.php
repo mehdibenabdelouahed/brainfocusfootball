@@ -34,22 +34,39 @@ Route::post('/email/verification-notification', [AuthController::class, 'resendV
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
-// Articles
+// Articles (public)
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/nutrition', function () {
     return view('articles.nutrition');
 })->name('articles.nutrition');
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
-// Profil joueur (galerie publique)
-Route::get('/profil-joueur', [PlayerProfileController::class, 'index'])->name('talents');
-
-// Page Contact
+// Page Contact (public)
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-// Newsletter
+// Newsletter (public)
 Route::post('/newsletter/subscribe', [App\Http\Controllers\NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+
+// ══════════════════════════════════════════════════════════
+// ROUTES PROTÉGÉES PAR AUTHENTIFICATION
+// ══════════════════════════════════════════════════════════
+
+// Galerie de talents — requiert d'être connecté
+Route::get('/profil-joueur', [PlayerProfileController::class, 'index'])->middleware('auth')->name('talents');
+
+// Profil joueur public (reste accessible sans auth pour le partage de lien)
+Route::get('/profil/{id}', [ProfileController::class, 'show'])->name('profile.show');
+
+// Comparateur — requiert d'être connecté + recruteur avec plan ≥ STANDARD
+Route::get('/comparateur', [PlayerProfileController::class, 'compare'])
+    ->middleware(['auth', 'role:recruiter', 'subscription:STANDARD,PRO,ACADEMIE'])
+    ->name('compare');
+
+// Page upgrade required (pour les redirections de middleware)
+Route::get('/upgrade-required', function () {
+    return view('auth.upgrade-required');
+})->middleware('auth')->name('upgrade.required');
 
 // Profile routes (protected by auth middleware)
 Route::middleware('auth')->group(function () {
@@ -66,7 +83,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/medical/edit', [\App\Http\Controllers\MedicalDataController::class, 'edit'])->name('medical.edit');
     Route::put('/medical/update', [\App\Http\Controllers\MedicalDataController::class, 'update'])->name('medical.update');
 
-    Route::post('/favorites/toggle', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    // Favoris — réservé aux recruteurs
+    Route::post('/favorites/toggle', [\App\Http\Controllers\FavoriteController::class, 'toggle'])
+        ->middleware('role:recruiter')
+        ->name('favorites.toggle');
 
     // Abonnements (Pricing & Checkout)
     Route::get('/tarifs', [\App\Http\Controllers\SubscriptionController::class, 'pricing'])->name('pricing');
@@ -80,20 +100,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/users/{user}/unban', [\App\Http\Controllers\AdminController::class, 'unbanUser'])->name('users.unban');
     });
 
-    // Messagerie Interne
-    Route::get('/messagerie', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
-    Route::get('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
-    Route::post('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
-    Route::post('/messagerie/initiate/{player}', [\App\Http\Controllers\MessageController::class, 'initiate'])->name('messages.initiate');
+    // Messagerie Interne — réservée aux joueurs et recruteurs
+    Route::middleware('role:recruiter,player')->group(function () {
+        Route::get('/messagerie', [\App\Http\Controllers\MessageController::class, 'index'])->name('messages.index');
+        Route::get('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'show'])->name('messages.show');
+        Route::post('/messagerie/{conversation}', [\App\Http\Controllers\MessageController::class, 'store'])->name('messages.store');
+        Route::post('/messagerie/initiate/{player}', [\App\Http\Controllers\MessageController::class, 'initiate'])->name('messages.initiate');
+    });
 });
-
-// Public profile view
-Route::get('/profil/{id}', [ProfileController::class, 'show'])->name('profile.show');
-
-// Comparateur
-Route::get('/comparateur', [PlayerProfileController::class, 'compare'])->name('compare');
 
 // Admin routes (protected by auth + admin middleware)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('articles', App\Http\Controllers\AdminArticleController::class);
 });
+
