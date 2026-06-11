@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Mot de passe oublié')
+@section('title', __('auth.forgot_meta_title'))
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <h2 class="text-3xl font-extrabold text-gray-900">
-                🔐 Mot de passe oublié ?
+                {{ __('auth.forgot_title') }}
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Pas de problème ! Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                {{ __('auth.forgot_subtitle') }}
             </p>
         </div>
 
@@ -36,7 +36,7 @@
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">
-                    Adresse email
+                    {{ __('auth.email_label') }}
                 </label>
                 <div class="mt-1">
                     <input 
@@ -47,7 +47,7 @@
                         required 
                         value="{{ old('email') }}"
                         class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('email') border-red-500 @enderror"
-                        placeholder="votre@email.com"
+                        placeholder="{{ __('auth.email_placeholder') }}"
                     >
                 </div>
                 @error('email')
@@ -65,13 +65,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                     </span>
-                    Envoyer le lien de réinitialisation
+                    {{ __('auth.send_reset_link') }}
                 </button>
             </div>
 
             <div class="text-center">
                 <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                    ← Retour à la connexion
+                    ← {{ __('auth.back_to_login') }}
                 </a>
             </div>
         </form>

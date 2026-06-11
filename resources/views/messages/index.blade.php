@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Messagerie — Brain Focus Football')
+@section('title', __('messages.meta_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white flex flex-col">
@@ -15,7 +15,7 @@
             <div class="p-5 border-b border-slate-800 flex-shrink-0">
                 <h1 class="text-lg font-bold flex items-center gap-3">
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                    Messagerie
+                    {{ __('messages.chat_header') }}
                 </h1>
                 @php
                     $unreadCount = 0;
@@ -24,7 +24,7 @@
                     }
                 @endphp
                 @if($unreadCount > 0)
-                    <p class="text-xs text-amber-400 mt-1">{{ $unreadCount }} message(s) non-lu(s)</p>
+                    <p class="text-xs text-amber-400 mt-1">{{ trans_choice('messages.unread_count', $unreadCount, ['count' => $unreadCount]) }}</p>
                 @endif
             </div>
 
@@ -54,7 +54,7 @@
                             @if($conv->latestMessage)
                                 <p class="text-xs text-slate-500 truncate">{{ Str::limit($conv->latestMessage->content, 40) }}</p>
                             @else
-                                <p class="text-xs text-slate-600 italic">Nouvelle conversation</p>
+                                <p class="text-xs text-slate-600 italic">{{ __('messages.new_conversation') }}</p>
                             @endif
                         </div>
 
@@ -65,11 +65,11 @@
                 @empty
                     <div class="flex flex-col items-center justify-center h-full py-16 px-6 text-center">
                         <svg class="w-12 h-12 text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                        <p class="text-slate-400 font-semibold mb-1">Aucune conversation</p>
+                        <p class="text-slate-400 font-semibold mb-1">{{ __('messages.no_conversations') }}</p>
                         @if(Auth::user()->isRecruiter())
-                            <p class="text-slate-600 text-xs">Trouvez un joueur dans la galerie des talents et cliquez sur "Contacter".</p>
+                            <p class="text-slate-600 text-xs">{{ __('messages.recruiter_empty_desc') }}</p>
                         @else
-                            <p class="text-slate-600 text-xs">Les recruteurs qui vous contactent apparaîtront ici.</p>
+                            <p class="text-slate-600 text-xs">{{ __('messages.player_empty_desc') }}</p>
                         @endif
                     </div>
                 @endforelse
@@ -113,13 +113,13 @@
                                 </div>
                                 <p class="text-[10px] text-slate-600 mt-1 {{ $isMe ? 'text-right' : 'text-left' }}">
                                     {{ $msg->created_at->format('H:i') }}
-                                    @if($isMe && $msg->is_read) · <span class="text-amber-500/60">Lu</span> @endif
+                                    @if($isMe && $msg->is_read) · <span class="text-amber-500/60">{{ __('messages.read') }}</span> @endif
                                 </p>
                             </div>
                         </div>
                     @empty
                         <div class="flex items-center justify-center h-full">
-                            <p class="text-slate-600 text-sm">Démarrez la conversation en envoyant le premier message !</p>
+                            <p class="text-slate-600 text-sm">{{ __('messages.start_conversation') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -129,7 +129,7 @@
                     <form action="{{ route('messages.store', $conversation->id) }}" method="POST" class="flex items-end gap-3">
                         @csrf
                         <div class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus-within:border-amber-500 transition">
-                            <textarea name="content" rows="1" placeholder="Écrivez votre message..." required
+                            <textarea name="content" rows="1" placeholder="{{ __('messages.type_placeholder') }}" required
                                       class="w-full bg-transparent text-white text-sm resize-none focus:outline-none placeholder-slate-500"
                                       oninput="this.style.height=''; this.style.height = Math.min(this.scrollHeight, 120) + 'px'"></textarea>
                         </div>
@@ -144,7 +144,7 @@
             <div class="hidden md:flex flex-1 items-center justify-center bg-slate-900/30 border border-slate-800 border-l-0 rounded-r-2xl">
                 <div class="text-center">
                     <svg class="w-16 h-16 text-slate-800 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                    <p class="text-slate-600 font-semibold">Sélectionnez une conversation</p>
+                    <p class="text-slate-600 font-semibold">{{ __('messages.select_conversation') }}</p>
                 </div>
             </div>
         @endif

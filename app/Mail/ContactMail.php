@@ -29,7 +29,7 @@ class ContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nouveau message de contact : ' . $this->data['subject'],
+            subject: __('emails.contact_subject') . ' : ' . $this->data['subject'],
             from: new \Illuminate\Mail\Mailables\Address($this->data['email'], $this->data['name']),
         );
     }

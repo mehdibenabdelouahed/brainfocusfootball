@@ -33,7 +33,7 @@ class GuardianAccountCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Autorisation parentale requise - Brain Focus Football',
+            subject: __('emails.guardian_subject'),
         );
     }
 

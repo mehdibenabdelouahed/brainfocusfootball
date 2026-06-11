@@ -9,9 +9,9 @@
             <svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
-            Dossier Médical Sécurisé
+            {{ __('profile.medical_title') }}
         </h1>
-        <p class="text-slate-400">Gérez les informations médicales de <span class="text-amber-400 font-semibold">{{ $player->first_name }} {{ $player->last_name }}</span>.</p>
+        <p class="text-slate-400">{!! __('profile.medical_subtitle', ['name' => '<span class="text-amber-400 font-semibold">' . e($player->first_name) . ' ' . e($player->last_name) . '</span>']) !!}</p>
     </div>
 
     {{-- Bannière de chiffrement --}}
@@ -22,10 +22,9 @@
             </svg>
         </div>
         <div>
-            <h3 class="text-emerald-400 font-bold mb-1">Chiffrement AES-256 Actif</h3>
+            <h3 class="text-emerald-400 font-bold mb-1">{{ __('profile.encryption_active') }}</h3>
             <p class="text-emerald-500/80 text-sm">
-                Toutes les données saisies sur cette page sont chiffrées de bout en bout avant d'être sauvegardées dans notre base de données. 
-                Seules les personnes expressément autorisées (joueur, tuteur) peuvent les déchiffrer et les consulter.
+                {{ __('profile.encryption_desc') }}
             </p>
         </div>
     </div>
@@ -47,9 +46,9 @@
                 
                 {{-- Groupe Sanguin --}}
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Groupe Sanguin</label>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">{{ __('profile.blood_type') }}</label>
                     <select name="blood_type_enc" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all">
-                        <option value="">Non renseigné</option>
+                        <option value="">{{ __('profile.not_specified') }}</option>
                         @foreach(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $type)
                             <option value="{{ $type }}" {{ old('blood_type_enc', $medicalData->blood_type_enc) == $type ? 'selected' : '' }}>
                                 {{ $type }}
@@ -60,23 +59,23 @@
 
                 {{-- Allergies --}}
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Allergies (Médicaments, aliments, etc.)</label>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">{{ __('profile.allergies_label') }}</label>
                     <textarea name="allergies_encrypted" rows="3" 
                               class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all placeholder-slate-600"
-                              placeholder="Listez les allergies connues...">{{ old('allergies_encrypted', $medicalData->allergies_encrypted) }}</textarea>
+                              placeholder="{{ __('profile.allergies_placeholder') }}">{{ old('allergies_encrypted', $medicalData->allergies_encrypted) }}</textarea>
                 </div>
 
                 {{-- Historique des blessures --}}
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-300 mb-2">Historique des blessures (Déchirures, fractures, opérations)</label>
+                    <label class="block text-sm font-bold text-slate-300 mb-2">{{ __('profile.injuries_label') }}</label>
                     <textarea name="injuries_history_enc" rows="4" 
                               class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all placeholder-slate-600"
-                              placeholder="Ex: Entorse cheville droite (2024)...">{{ old('injuries_history_enc', $medicalData->injuries_history_enc) }}</textarea>
+                              placeholder="{{ __('profile.injuries_placeholder') }}">{{ old('injuries_history_enc', $medicalData->injuries_history_enc) }}</textarea>
                 </div>
 
                 {{-- Permissions d'accès --}}
                 <div class="md:col-span-2 pt-6 border-t border-slate-800">
-                    <h3 class="text-lg font-bold text-white mb-4">Confidentialité & Partage</h3>
+                    <h3 class="text-lg font-bold text-white mb-4">{{ __('profile.privacy_sharing') }}</h3>
                     
                     <label class="flex items-start gap-4 cursor-pointer p-4 bg-slate-800/30 rounded-2xl border border-slate-700/50 hover:bg-slate-800/50 transition">
                         <div class="flex items-center h-6">
@@ -85,8 +84,8 @@
                                    {{ old('access_restricted', $medicalData->access_restricted) ? 'checked' : '' }}>
                         </div>
                         <div>
-                            <span class="block text-white font-semibold mb-1">Restreindre l'accès aux recruteurs</span>
-                            <span class="block text-sm text-slate-400">Si cette case est cochée, aucun recruteur ne pourra consulter ce dossier médical sans vous en faire la demande explicite au préalable.</span>
+                            <span class="block text-white font-semibold mb-1">{{ __('profile.restrict_recruiter_access') }}</span>
+                            <span class="block text-sm text-slate-400">{{ __('profile.restrict_access_desc') }}</span>
                         </div>
                     </label>
                 </div>
@@ -96,10 +95,10 @@
         {{-- Actions --}}
         <div class="flex justify-end gap-4">
             <a href="{{ route('dashboard') }}" class="px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition">
-                Retour au Dashboard
+                {{ __('profile.back_to_dashboard') }}
             </a>
             <button type="submit" class="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black tracking-wide shadow-lg shadow-amber-500/20 transition-all hover:-translate-y-0.5">
-                Chiffrer et Sauvegarder
+                {{ __('profile.encrypt_and_save') }}
             </button>
         </div>
     </form>

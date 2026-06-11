@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Vérifiez votre email')
+@section('title', __('auth.verify_meta_title'))
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -12,10 +12,10 @@
                 </svg>
             </div>
             <h2 class="text-3xl font-extrabold text-white">
-                Vérifiez votre adresse email
+                {{ __('auth.verify_title') }}
             </h2>
             <p class="mt-2 text-sm text-gray-300">
-                Un email de vérification a été envoyé à <strong class="text-indigo-400">{{ auth()->user()->email }}</strong>
+                {{ __('auth.verify_subtitle') }} <strong class="text-indigo-400">{{ auth()->user()->email }}</strong>
             </p>
         </div>
 
@@ -30,7 +30,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-green-300">
-                                Un nouveau lien de vérification a été envoyé!
+                                {{ __('auth.verify_link_sent') }}
                             </p>
                         </div>
                     </div>
@@ -42,25 +42,25 @@
                     <svg class="h-6 w-6 text-indigo-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span class="text-sm">Consultez votre boîte de réception et cliquez sur le lien de vérification.</span>
+                    <span class="text-sm">{{ __('auth.verify_inbox_desc') }}</span>
                 </p>
                 <p class="flex items-start">
                     <svg class="h-6 w-6 text-indigo-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <span class="text-sm">Le lien expire dans 60 minutes.</span>
+                    <span class="text-sm">{{ __('auth.verify_expiry_desc') }}</span>
                 </p>
                 <p class="flex items-start">
                     <svg class="h-6 w-6 text-indigo-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
                     </svg>
-                    <span class="text-sm">Vérifiez également votre dossier spam si vous ne trouvez pas l'email.</span>
+                    <span class="text-sm">{{ __('auth.verify_spam_desc') }}</span>
                 </p>
             </div>
 
             <div class="mt-8 pt-6 border-t border-white/10">
                 <p class="text-sm text-gray-300 text-center mb-4">
-                    Vous n'avez pas reçu l'email ?
+                    {{ __('auth.verify_not_received') }}
                 </p>
                 <form method="POST" action="{{ route('verification.send') }}">
                     @csrf
@@ -68,7 +68,7 @@
                         type="submit" 
                         class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200"
                     >
-                        Renvoyer l'email de vérification
+                        {{ __('auth.verify_resend_button') }}
                     </button>
                 </form>
             </div>
@@ -77,7 +77,7 @@
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
                     <button type="submit" class="text-sm text-gray-400 hover:text-white transition-colors">
-                        Se déconnecter
+                        {{ __('auth.logout') }}
                     </button>
                 </form>
             </div>

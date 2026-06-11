@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autorisation parentale requise</title>
+    <title>{{ __('emails.guardian_subject') }}</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -85,29 +85,28 @@
         </div>
         
         <div class="content">
-            <h2>Bonjour,</h2>
-            <p>Votre enfant <strong>{{ $childName }}</strong> s'est récemment inscrit(e) sur la plateforme <strong>Brain Focus Football</strong>.</p>
-            <p>Conformément à la législation en vigueur et à notre politique de protection des mineurs (RGPD), le profil sportif de votre enfant ne sera visible par les recruteurs que lorsque vous aurez donné votre consentement légal.</p>
-            
-            <p>Un compte "Tuteur" a été automatiquement créé pour vous afin de gérer cette autorisation et de suivre son évolution. Voici vos identifiants provisoires :</p>
+            <h2>{{ __('emails.guardian_hello') }}</h2>
+            <p>{!! __('emails.guardian_body_1', ['childName' => $childName]) !!}</p>
+            <p>{!! __('emails.guardian_body_2') !!}</p>
+            <p>{!! __('emails.guardian_body_3') !!}</p>
             
             <div class="credentials-box">
-                <p>Identifiant (Email) : <span style="color: #f59e0b;">{{ $guardianEmail }}</span></p>
-                <p>Mot de passe provisoire : <span style="color: #f59e0b;">{{ $temporaryPassword }}</span></p>
+                <p>{{ __('emails.guardian_username') }} <span style="color: #f59e0b;">{{ $guardianEmail }}</span></p>
+                <p>{{ __('emails.guardian_temp_password') }} <span style="color: #f59e0b;">{{ $temporaryPassword }}</span></p>
             </div>
             
             <div class="button-container">
-                <a href="{{ route('login') }}" class="button">Me connecter et valider le profil</a>
+                <a href="{{ route('login') }}" class="button">{{ __('emails.guardian_button') }}</a>
             </div>
             
-            <p><em>Nous vous conseillons de modifier ce mot de passe provisoire dès votre première connexion dans les paramètres de votre compte.</em></p>
+            <p><em>{{ __('emails.guardian_hint') }}</em></p>
             
-            <p>Si vous n'êtes pas le tuteur légal de cet enfant ou s'il s'agit d'une erreur, vous pouvez ignorer cet e-mail.</p>
+            <p>{{ __('emails.guardian_not_guardian') }}</p>
         </div>
         
         <div class="footer">
-            <p>&copy; {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
-            <p>Ceci est un e-mail automatique, merci de ne pas y répondre.</p>
+            <p>&copy; {{ date('Y') }} Brain Focus Football. {{ __('emails.all_rights_reserved') }}</p>
+            <p>{{ __('emails.auto_email_footer') }}</p>
         </div>
     </div>
 </body>

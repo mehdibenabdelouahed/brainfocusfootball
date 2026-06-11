@@ -1,24 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'Articles - Brain Focus Football')
+@section('title', __('articles.meta_title'))
 
 @section('content')
-<div class="min-h-screen bg-slate-950 text-white">
+<div class="min-h-screen bg-slate-950 text-white flex flex-col">
     
     {{-- NAVBAR --}}
     @include('partials.navbar')
 
     {{-- Hero Section --}}
-    <section class="relative py-16 px-4 overflow-hidden">
+    <section class="relative py-16 px-4 overflow-hidden flex-1">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none"></div>
         
         <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    Tous nos <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Articles</span>
+                    {!! __('articles.title', ['span' => '<span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">Articles</span>']) !!}
                 </h1>
                 <p class="text-slate-400 text-lg max-w-2xl mx-auto">
-                    Découvre les coulisses du football professionnel : mental, carrière, préparation physique et bien plus encore.
+                    {{ __('articles.subtitle') }}
                 </p>
             </div>
 
@@ -27,7 +27,7 @@
             <div class="flex flex-wrap justify-center gap-3 mb-10">
                 <a href="{{ route('articles.index') }}" 
                    class="px-4 py-2 rounded-full border {{ !$category ? 'bg-amber-500 border-amber-500 text-slate-950 font-bold' : 'border-slate-800 text-slate-400 hover:border-amber-500/50 hover:text-amber-400' }} text-sm transition">
-                    Tous
+                    {{ __('articles.all') }}
                 </a>
                 @foreach($categories as $cat)
                     <a href="{{ route('articles.index', ['category' => $cat]) }}" 
@@ -58,14 +58,14 @@
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-3 mb-3 text-slate-500 text-[10px] font-bold uppercase tracking-widest">
-                                <span>{{ $article->reading_time }} min de lecture</span>
+                                <span>{{ __('articles.reading_time', ['time' => $article->reading_time]) }}</span>
                                 <span>•</span>
-                                <span>{{ $article->published_at->format('d M Y') }}</span>
+                                <span>{{ $article->published_at->translatedFormat ? $article->published_at->translatedFormat('d M Y') : $article->published_at->format('d M Y') }}</span>
                             </div>
                             <h3 class="text-xl font-bold mb-3 group-hover:text-amber-400 transition leading-tight">{{ $article->title }}</h3>
                             <p class="text-sm text-slate-400 mb-5 line-clamp-2 leading-relaxed">{{ $article->excerpt }}</p>
                             <span class="text-xs text-amber-500 font-bold inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-                                Lire l'article 
+                                {{ __('articles.read_article') }}
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                             </span>
                         </div>
@@ -73,9 +73,9 @@
                 @empty
                     <div class="col-span-full py-20 text-center">
                         <div class="text-5xl mb-4">🔍</div>
-                        <h3 class="text-xl font-bold text-slate-300">Aucun article trouvé</h3>
-                        <p class="text-slate-500 mt-2">Nous préparons de nouveaux contenus, reviens très bientôt !</p>
-                        <a href="{{ route('articles.index') }}" class="inline-block mt-6 text-amber-500 hover:underline">Voir tous les articles</a>
+                        <h3 class="text-xl font-bold text-slate-300">{{ __('articles.no_articles') }}</h3>
+                        <p class="text-slate-500 mt-2">{{ __('articles.coming_soon') }}</p>
+                        <a href="{{ route('articles.index') }}" class="inline-block mt-6 text-amber-500 hover:underline">{{ __('articles.view_all') }}</a>
                     </div>
                 @endforelse
             </div>
@@ -88,17 +88,5 @@
             @endif
         </div>
     </section>
-
-    {{-- Footer --}}
-    <footer class="border-t border-slate-800 bg-slate-950 py-4 mt-20">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
-            <p>© {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
-            <div class="flex gap-4">
-                <a href="mailto:contact@brainfocusfootball.com" class="hover:text-amber-300">Contact</a>
-                <a href="{{ route('home') }}#" class="hover:text-amber-300">Mentions légales</a>
-                <a href="{{ route('home') }}#" class="hover:text-amber-300">Confidentialité</a>
-            </div>
-        </div>
-    </footer>
 </div>
 @endsection

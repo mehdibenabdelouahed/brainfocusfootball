@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>🧠 Bienvenue sur Brain Focus Football !</title>
+    <title>{{ __('emails.newsletter_subject') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,59 +31,59 @@
 <div class="container">
     <div class="logo-section">
         <h1>Brain Focus Football</h1>
-        <p style="color: #64748b; font-size: 13px; margin-top: 8px;">Les champions commencent par l'esprit</p>
+        <p style="color: #64748b; font-size: 13px; margin-top: 8px;">{{ __('emails.newsletter_tagline') }}</p>
     </div>
 
     <div class="card">
         <div class="badge">
-            <span>🎉</span> Bienvenue dans la communauté
+            {{ __('emails.newsletter_welcome_community') }}
         </div>
 
         <div class="greeting">
-            Tu es maintenant <span>dans la boucle</span> !
+            {!! __('emails.newsletter_in_loop') !!}
         </div>
 
         @if($subscriber->name)
-            <p>Bonjour <strong style="color: #f1f5f9;">{{ $subscriber->name }}</strong>,</p>
+            <p>{!! __('emails.newsletter_hello', ['name' => e($subscriber->name)]) !!}</p>
         @endif
 
-        <p>Merci de rejoindre Brain Focus Football. Tu vas recevoir <strong style="color: #f1f5f9;">chaque semaine un conseil mental, nutritionnel ou tactique</strong> pour avancer vers tes objectifs football.</p>
+        <p>{!! __('emails.newsletter_body_1') !!}</p>
 
-        <p>Voilà ce qui t'attend dans la newsletter :</p>
+        <p>{{ __('emails.newsletter_body_2') }}</p>
 
         <div class="features">
             <div class="feature">
                 <div class="feature-icon">🧠</div>
                 <div>
-                    <div class="feature-title">Préparation mentale</div>
-                    <div class="feature-desc">Techniques de visualisation, gestion du stress, confiance en soi</div>
+                    <div class="feature-title">{{ __('emails.newsletter_feat_mental_title') }}</div>
+                    <div class="feature-desc">{{ __('emails.newsletter_feat_mental_desc') }}</div>
                 </div>
             </div>
             <div class="feature">
                 <div class="feature-icon">🥗</div>
                 <div>
-                    <div class="feature-title">Nutrition & Récupération</div>
-                    <div class="feature-desc">Ce que mangent les pros, les erreurs à éviter, les recettes gagnantes</div>
+                    <div class="feature-title">{{ __('emails.newsletter_feat_nutrition_title') }}</div>
+                    <div class="feature-desc">{{ __('emails.newsletter_feat_nutrition_desc') }}</div>
                 </div>
             </div>
             <div class="feature">
                 <div class="feature-icon">🎯</div>
                 <div>
-                    <div class="feature-title">Carrière & Recrutement</div>
-                    <div class="feature-desc">Comment les recruteurs pensent, comment te faire remarquer</div>
+                    <div class="feature-title">{{ __('emails.newsletter_feat_career_title') }}</div>
+                    <div class="feature-desc">{{ __('emails.newsletter_feat_career_desc') }}</div>
                 </div>
             </div>
         </div>
 
         <a href="{{ route('home') }}" class="cta-btn">
-            Visiter Brain Focus Football →
+            {{ __('emails.newsletter_visit_btn') }}
         </a>
 
-        <p style="font-size: 13px; text-align: center; color: #475569;">Si tu ne t'es pas inscrit à cette newsletter, tu peux ignorer cet email.</p>
+        <p style="font-size: 13px; text-align: center; color: #475569;">{{ __('emails.newsletter_ignore_hint') }}</p>
     </div>
 
     <div class="footer">
-        <p>© {{ date('Y') }} Brain Focus Football. Tous droits réservés.</p>
+        <p>© {{ date('Y') }} Brain Focus Football. {{ __('emails.all_rights_reserved') }}</p>
         <p style="margin-top: 8px;"><a href="{{ route('home') }}">brainfocusfootball.com</a></p>
     </div>
 </div>

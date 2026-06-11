@@ -2,13 +2,311 @@
 @tailwind components;
 @tailwind utilities;
 
-/* puis toutes les animations BFF qu’on a ajoutées */
-/* === Animations custom BFF === */
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — GoalKick Dark × BrainFocusFootball
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+    /* Core palette — Wix Marino Scuba inspired Navy & Yellow */
+    --bff-bg-dark: #0e1626;
+    --bff-bg-section: #121b2d;
+    --bff-bg-card: #172237;
+    --bff-bg-card-hover: #1d2a44;
+    --bff-border: #213250;
+    --bff-border-hover: #ffdc21;
+
+    /* Accent — neon yellow/gold */
+    --bff-accent: #ffdc21;
+    --bff-accent-light: #ffe661;
+    --bff-accent-dark: #ccab00;
+    --bff-accent-glow: rgba(255, 220, 33, 0.2);
+
+    /* Accent Recruteur — White / Gold */
+    --bff-accent-rec: #ffd200;
+    --bff-accent-rec-light: #ffe04d;
+    --bff-accent-rec-dark: #b39300;
+    --bff-accent-rec-glow: rgba(255, 210, 0, 0.2);
+
+    /* Typography */
+    --bff-text-primary: #ffffff;
+    --bff-text-secondary: #b2c0d9;
+    --bff-text-meta: #7388a6;
+
+    /* Navy Overlay for hero */
+    --bff-overlay-warm: rgba(255, 220, 33, 0.1);
+    --bff-overlay-dark: rgba(14, 22, 38, 0.75);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE RESET & TYPOGRAPHY
+   ═══════════════════════════════════════════════════════ */
+
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    background-color: var(--bff-bg-dark);
+    color: var(--bff-text-primary);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Wix-style heading typography */
+.bff-heading {
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.bff-heading-section {
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUTTON STYLES — Wix inspired Pill Buttons
+   ═══════════════════════════════════════════════════════ */
+
+.bff-btn-main {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 9999px; /* Pill-shaped button */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.bff-btn-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bff-btn-main:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px var(--bff-accent-glow);
+}
+
+.bff-btn-main:hover::before {
+    opacity: 1;
+}
+
+.bff-btn-main:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* Outline button with fill on hover */
+.bff-btn-outline {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: 9999px; /* Pill-shaped outline button */
+    transition: color 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
+}
+
+.bff-btn-outline::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: var(--bff-accent);
+    z-index: -1;
+    border-radius: 9999px;
+    transition: height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bff-btn-outline:hover {
+    color: #0e1626;
+    border-color: var(--bff-accent);
+    transform: translateY(-2px);
+}
+
+.bff-btn-outline:hover::before {
+    height: 100%;
+}
+
+.bff-btn-outline-rec::before {
+    background: var(--bff-accent-rec);
+}
+
+.bff-btn-outline-rec:hover {
+    color: #0e1626;
+    border-color: var(--bff-accent-rec);
+}
+
+/* ═══════════════════════════════════════════════════════
+   CARD STYLES — Wix inspired Cards
+   ═══════════════════════════════════════════════════════ */
+
+.bff-card {
+    background: var(--bff-bg-card);
+    border: 1px solid var(--bff-border);
+    border-radius: 8px; /* Rounded corners for Wix cards */
+    transition: border-color 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bff-card:hover {
+    border-color: var(--bff-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.bff-card-rec:hover {
+    border-color: var(--bff-accent-rec);
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAVBAR — Wix transparent/navy style
+   ═══════════════════════════════════════════════════════ */
+
+.bff-navbar {
+    background: rgba(14, 22, 38, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.4s ease;
+}
+
+.bff-nav-link {
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--bff-text-secondary);
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.bff-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--bff-accent);
+    transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bff-nav-link:hover,
+.bff-nav-link.active {
+    color: var(--bff-accent);
+}
+
+.bff-nav-link:hover::after,
+.bff-nav-link.active::after {
+    width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HERO — GoalKick cinematic style
+   ═══════════════════════════════════════════════════════ */
+
+.bff-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.bff-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(8, 8, 8, 0.3) 0%,
+        rgba(8, 8, 8, 0.5) 40%,
+        rgba(8, 8, 8, 0.85) 75%,
+        var(--bff-bg-dark) 100%
+    );
+    z-index: 1;
+}
+
+.bff-hero-overlay-warm {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at 30% 20%,
+        var(--bff-overlay-warm) 0%,
+        transparent 70%
+    );
+    z-index: 1;
+    mix-blend-mode: multiply;
+}
+
+.bff-hero-title {
+    font-family: 'Saira Condensed', 'Impact', sans-serif;
+    text-transform: uppercase;
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION SEPARATOR — GoalKick thin line
+   ═══════════════════════════════════════════════════════ */
+
+.bff-separator {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--bff-border) 20%, var(--bff-border) 80%, transparent 100%);
+}
+
+.bff-separator-accent {
+    height: 2px;
+    width: 60px;
+    background: var(--bff-accent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   COUNTER NUMBERS — GoalKick massive style
+   ═══════════════════════════════════════════════════════ */
+
+.bff-stat-number {
+    font-family: 'Saira Condensed', 'Impact', sans-serif;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--bff-text-primary);
+}
+
+.bff-stat-label {
+    font-family: 'Saira Condensed', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--bff-text-meta);
+    font-size: 0.7rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS — Enhanced from existing + GoalKick polish
+   ═══════════════════════════════════════════════════════ */
 
 @keyframes bff-fade-in-up {
     0% {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     100% {
         opacity: 1;
@@ -16,37 +314,40 @@
     }
 }
 
-@keyframes bff-float {
+@keyframes bff-fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes bff-slide-up {
     0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-8px);
+        opacity: 0;
+        transform: translateY(60px) scale(0.96);
     }
     100% {
-        transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
+}
+
+@keyframes bff-float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0); }
 }
 
 @keyframes bff-gradient-move {
-    0% {
-        transform: translate3d(-10px, 0, 0) scale(1);
-        opacity: 0.6;
-    }
-    50% {
-        transform: translate3d(10px, 5px, 0) scale(1.05);
-        opacity: 0.9;
-    }
-    100% {
-        transform: translate3d(-10px, 0, 0) scale(1);
-        opacity: 0.6;
-    }
+    0% { transform: translate3d(-10px, 0, 0) scale(1); opacity: 0.6; }
+    50% { transform: translate3d(10px, 5px, 0) scale(1.05); opacity: 0.9; }
+    100% { transform: translate3d(-10px, 0, 0) scale(1); opacity: 0.6; }
 }
-
-/* Classes utilitaires */
 
 .bff-animate-fade-in-up {
     animation: bff-fade-in-up 0.8s ease-out both;
+}
+
+.bff-animate-slide-up {
+    animation: bff-slide-up 1s cubic-bezier(0.19, 1, 0.22, 1) both;
 }
 
 .bff-animate-float {
@@ -57,24 +358,12 @@
     animation: bff-gradient-move 12s ease-in-out infinite;
 }
 
-/* Petit effet sur les boutons principaux */
-.bff-btn-main {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.bff-btn-main:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 18px 35px rgba(245, 158, 11, 0.32);
-}
-
-/* === Animations avancées BFF === */
-
 /* Révélation au scroll */
 @keyframes bff-reveal-up {
     0% {
         opacity: 0;
         transform: translateY(40px) scale(0.98);
-        filter: blur(6px);
+        filter: blur(4px);
     }
     100% {
         opacity: 1;
@@ -106,18 +395,10 @@
     transform: translateY(0);
 }
 
-.bff-reveal-stagger.bff-reveal-visible > *:nth-child(1) {
-    transition-delay: 0.05s;
-}
-.bff-reveal-stagger.bff-reveal-visible > *:nth-child(2) {
-    transition-delay: 0.12s;
-}
-.bff-reveal-stagger.bff-reveal-visible > *:nth-child(3) {
-    transition-delay: 0.19s;
-}
-.bff-reveal-stagger.bff-reveal-visible > *:nth-child(4) {
-    transition-delay: 0.26s;
-}
+.bff-reveal-stagger.bff-reveal-visible > *:nth-child(1) { transition-delay: 0.05s; }
+.bff-reveal-stagger.bff-reveal-visible > *:nth-child(2) { transition-delay: 0.12s; }
+.bff-reveal-stagger.bff-reveal-visible > *:nth-child(3) { transition-delay: 0.19s; }
+.bff-reveal-stagger.bff-reveal-visible > *:nth-child(4) { transition-delay: 0.26s; }
 
 /* Tilt 3D sur la carte joueur */
 .bff-card-tilt {
@@ -130,7 +411,7 @@
     transform: translateZ(40px);
 }
 
-/* Parallax léger du bloc hero */
+/* === Parallax léger du bloc hero === */
 .bff-parallax-wrapper {
     position: relative;
     overflow: hidden;
@@ -141,12 +422,12 @@
     inset: -20%;
     background: radial-gradient(
             circle at 10% 0%,
-            rgba(245, 158, 11, 0.3),
+            rgba(245, 158, 11, 0.2),
             transparent 60%
         ),
         radial-gradient(
             circle at 90% 100%,
-            rgba(56, 189, 248, 0.25),
+            rgba(139, 30, 0, 0.2),
             transparent 55%
         );
     opacity: 0.55;
@@ -155,18 +436,11 @@
     will-change: transform;
 }
 
-/* === Effet texte gradient animé sur le titre === */
-
+/* === Effet texte gradient animé === */
 @keyframes bff-gradient-text {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .bff-title-highlight {
@@ -188,38 +462,21 @@
 }
 
 /* === Pulse léger sur les boutons principaux === */
-
 @keyframes bff-btn-pulse {
-    0% {
-        transform: translateY(0) scale(1);
-        box-shadow: 0 0 0 rgba(16, 185, 129, 0);
-    }
-    50% {
-        transform: translateY(-1px) scale(1.03);
-        box-shadow: 0 18px 35px rgba(245, 158, 11, 0.32);
-    }
-    100% {
-        transform: translateY(0) scale(1);
-        box-shadow: 0 0 0 rgba(16, 185, 129, 0);
-    }
+    0% { box-shadow: 0 0 0 0 var(--bff-accent-glow); }
+    50% { box-shadow: 0 0 30px 4px var(--bff-accent-glow); }
+    100% { box-shadow: 0 0 0 0 var(--bff-accent-glow); }
 }
 
 .bff-btn-pulse {
-    animation: bff-btn-pulse 3.2s ease-in-out infinite;
+    animation: bff-btn-pulse 3s ease-in-out infinite;
 }
 
-/* === Glow doux et respirant sur la carte joueur === */
-
+/* === Glow card === */
 @keyframes bff-card-glow {
-    0% {
-        box-shadow: 0 18px 40px rgba(245, 158, 11, 0.15);
-    }
-    50% {
-        box-shadow: 0 22px 55px rgba(56, 189, 248, 0.45);
-    }
-    100% {
-        box-shadow: 0 18px 40px rgba(245, 158, 11, 0.15);
-    }
+    0% { box-shadow: 0 18px 40px rgba(245, 158, 11, 0.1); }
+    50% { box-shadow: 0 22px 55px rgba(245, 158, 11, 0.2); }
+    100% { box-shadow: 0 18px 40px rgba(245, 158, 11, 0.1); }
 }
 
 .bff-card-glow {
@@ -228,14 +485,8 @@
 
 /* === Animation Radar Chart === */
 @keyframes bff-radar-grow {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 .bff-animate-radar {
@@ -245,12 +496,8 @@
 
 /* === Animation Marquee (Défilement Infini) === */
 @keyframes marquee {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .animate-marquee {
@@ -263,12 +510,48 @@
     animation-play-state: paused;
 }
 
-/* === Correctifs Globaux Responsivité === */
+/* ═══════════════════════════════════════════════════════
+   FOOTER — GoalKick style
+   ═══════════════════════════════════════════════════════ */
 
-html, body {
-    max-width: 100vw;
-    overflow-x: hidden;
-    position: relative;
+.bff-footer {
+    background: #050505;
+    border-top: 1px solid var(--bff-border);
+}
+
+.bff-footer a {
+    transition: color 0.3s ease;
+}
+
+.bff-footer a:hover {
+    color: var(--bff-accent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOGGLE SWITCH — Enhanced
+   ═══════════════════════════════════════════════════════ */
+
+.bff-toggle {
+    background: rgba(17, 17, 17, 0.95);
+    border: 1px solid var(--bff-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   UTILITY — Image hover zoom (GoalKick style)
+   ═══════════════════════════════════════════════════════ */
+
+.bff-img-zoom {
+    overflow: hidden;
+}
+
+.bff-img-zoom img {
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bff-img-zoom:hover img {
+    transform: scale(1.08);
 }
 
 /* Empêche les éléments de grille de casser le layout */
@@ -281,3 +564,12 @@ svg, img {
     max-width: 100%;
     height: auto;
 }
+
+/* Custom responsive adjustments for landscape/short screens */
+@media (max-height: 580px) {
+    /* Push the hero content down so it doesn't collide with the sticky toggle */
+    .bff-hero-content {
+        padding-top: 170px !important;
+    }
+}
+

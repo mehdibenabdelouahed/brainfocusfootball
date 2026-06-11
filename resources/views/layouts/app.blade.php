@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Brain Focus Football')</title>
@@ -9,6 +9,11 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#f59e0b">
     <link rel="apple-touch-icon" href="/images/logoBFF.png">
+
+    {{-- Google Fonts — Wix-inspired Poppins typography --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
@@ -29,7 +34,7 @@
     </style>
     @stack('styles')
 </head>
-<body x-data="compareSystem()" @toggle-compare.window="toggle($event.detail)" class="antialiased bg-slate-950 text-white min-h-screen">
+<body x-data="compareSystem()" @toggle-compare.window="toggle($event.detail)" class="antialiased min-h-screen" style="background-color: var(--bff-bg-dark); color: var(--bff-text-primary);">
     {{-- Notifications flash globales --}}
     @if(session('error'))
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 6000)"
@@ -44,7 +49,7 @@
                 <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                 <p class="text-sm text-red-300 flex-1">{{ session('error') }}</p>
                 <button @click="show = false" class="text-red-400 hover:text-red-300 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
         </div>
@@ -71,6 +76,8 @@
     @yield('content')
 
     @include('partials.compare-bar')
+
+    @include('partials.footer')
 
     @stack('scripts')
 
@@ -109,12 +116,10 @@
 
                 compareNow() {
                     const ids = this.players.map(p => p.id).join(',');
-                    window.location.href = `/comparateur?ids=${ids}`;
+                    window.location.href = `/${document.documentElement.lang}/compare?ids=${ids}`;
                 }
             }
         }
     </script>
 </body>
 </html>
-
-

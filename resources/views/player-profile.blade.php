@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nos Talents - Brain Focus Football')
+@section('title', __('profile.talent_gallery_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white">
@@ -13,10 +13,10 @@
         {{-- En-tête --}}
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                Nos Talents
+                {{ __('profile.talent_gallery_header') }}
             </h1>
             <p class="text-slate-400 max-w-2xl mx-auto">
-                Découvrez les joueurs qui font confiance à Brain Focus Football pour développer leur carrière.
+                {{ __('profile.talent_gallery_subheader') }}
             </p>
         </div>
 
@@ -30,7 +30,7 @@
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-emerald-400">Plan {{ $quotaInfo['plan'] }} — Consultations illimitées</p>
+                            <p class="text-sm font-bold text-emerald-400">{{ __('profile.quota_unlimited', ['plan' => $quotaInfo['plan']]) }}</p>
                         </div>
                     @elseif($quotaInfo['remaining'] > 0)
                         <div class="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center">
@@ -38,25 +38,26 @@
                         </div>
                         <div>
                             <p class="text-sm font-bold text-white">
-                                <span class="{{ $quotaInfo['remaining'] > 5 ? 'text-sky-400' : 'text-amber-400' }}">{{ $quotaInfo['remaining'] }}</span> 
-                                consultation{{ $quotaInfo['remaining'] > 1 ? 's' : '' }} restante{{ $quotaInfo['remaining'] > 1 ? 's' : '' }} ce mois
-                                <span class="text-slate-500">({{ $quotaInfo['used'] }}/{{ $quotaInfo['limit'] }})</span>
+                                <span class="{{ $quotaInfo['remaining'] > 5 ? 'text-sky-400' : 'text-amber-400' }}">
+                                    {{ trans_choice('profile.quota_remaining', $quotaInfo['remaining'], ['remaining' => $quotaInfo['remaining']]) }}
+                                </span> 
+                                <span class="text-slate-500">{{ __('profile.quota_used_limit', ['used' => $quotaInfo['used'], 'limit' => $quotaInfo['limit']]) }}</span>
                             </p>
-                            <p class="text-[10px] text-slate-500">Plan {{ $quotaInfo['plan'] }}</p>
+                            <p class="text-[10px] text-slate-500">{{ __('profile.quota_plan', ['plan' => $quotaInfo['plan']]) }}</p>
                         </div>
                     @else
                         <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
                             <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-red-400">Quota mensuel atteint ({{ $quotaInfo['used'] }}/{{ $quotaInfo['limit'] }})</p>
-                            <p class="text-[10px] text-slate-500">Plan {{ $quotaInfo['plan'] }} — Passez au plan supérieur pour plus de consultations</p>
+                            <p class="text-sm font-bold text-red-400">{{ __('profile.quota_reached', ['used' => $quotaInfo['used'], 'limit' => $quotaInfo['limit']]) }}</p>
+                            <p class="text-[10px] text-slate-500">{{ __('profile.quota_reached_sub', ['plan' => $quotaInfo['plan']]) }}</p>
                         </div>
                     @endif
                 </div>
                 @if($quotaInfo['remaining'] !== null)
                     <a href="{{ route('pricing') }}" class="px-4 py-2 text-xs font-bold rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition whitespace-nowrap active:scale-95">
-                        Augmenter mon quota
+                        {{ __('profile.increase_quota') }}
                     </a>
                 @endif
             </div>
@@ -73,16 +74,16 @@
                         </span>
                         <input type="text" name="search" value="{{ request('search') }}" 
                             class="w-full bg-slate-800/50 border-slate-700 rounded-2xl py-3.5 pl-12 text-white placeholder-slate-500 focus:ring-amber-500 focus:border-amber-500 transition shadow-inner"
-                            placeholder="Rechercher un nom, un club...">
+                            placeholder="{{ __('profile.search_placeholder') }}">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                     {{-- Poste --}}
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Poste</label>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{{ __('profile.position') }}</label>
                         <select name="position" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
-                            <option value="">Tous les postes</option>
+                            <option value="">{{ __('profile.all_positions') }}</option>
                             @foreach($positions as $pos)
                                 <option value="{{ $pos }}" {{ request('position') == $pos ? 'selected' : '' }}>{{ $pos }}</option>
                             @endforeach
@@ -91,9 +92,9 @@
 
                     {{-- Niveau --}}
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Niveau</label>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{{ __('profile.level') }}</label>
                         <select name="level" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
-                            <option value="">Tous les niveaux</option>
+                            <option value="">{{ __('profile.all_levels') }}</option>
                             @foreach($levels as $lvl)
                                 <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>{{ $lvl }}</option>
                             @endforeach
@@ -102,9 +103,9 @@
 
                     {{-- Catégorie d'âge --}}
                     <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Catégorie</label>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{{ __('profile.category_label') }}</label>
                         <select name="age_group" class="w-full bg-slate-800 border-slate-700 rounded-xl text-slate-200 text-sm focus:ring-amber-500 focus:border-amber-500 transition">
-                            <option value="">Toutes les catégories</option>
+                            <option value="">{{ __('profile.all_categories') }}</option>
                             @foreach($ageGroups as $group)
                                 <option value="{{ $group }}" {{ request('age_group') == $group ? 'selected' : '' }}>{{ $group }}</option>
                             @endforeach
@@ -114,10 +115,10 @@
                     {{-- Bouton Filtrer --}}
                     <div class="flex gap-2">
                         <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition shadow-lg shadow-amber-500/10 active:scale-95">
-                            Appliquer
+                            {{ __('profile.apply_filters') }}
                         </button>
                         @if(request()->anyFilled(['position', 'level', 'age_group', 'search']))
-                            <a href="{{ route('talents') }}" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl transition" title="Réinitialiser">
+                            <a href="{{ route('talents') }}" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl transition" title="{{ __('profile.reset_filters') }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             </a>
                         @endif
@@ -132,7 +133,7 @@
             <div id="loader" class="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-3xl opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="flex flex-col items-center gap-4">
                     <div class="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
-                    <p class="text-amber-500 font-bold text-sm uppercase tracking-widest">Recherche...</p>
+                    <p class="text-amber-500 font-bold text-sm uppercase tracking-widest">{{ __('profile.searching') }}</p>
                 </div>
             </div>
 

@@ -26,7 +26,7 @@ class PlayerFavorited extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '⭐ Un recruteur a mis votre profil en favori !',
+            subject: __('emails.player_fav_subject'),
         );
     }
 

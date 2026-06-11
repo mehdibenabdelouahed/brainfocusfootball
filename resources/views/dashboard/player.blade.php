@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mon Tableau de Bord — Brain Focus Football')
+@section('title', __('dashboard.title_player'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white">
@@ -11,11 +11,11 @@
         {{-- En-tête de bienvenue --}}
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10">
             <div>
-                <p class="text-sm text-amber-400 font-semibold uppercase tracking-widest mb-1">Tableau de bord</p>
+                <p class="text-sm text-amber-400 font-semibold uppercase tracking-widest mb-1">{{ __('dashboard.role_player') }}</p>
                 <h1 class="text-2xl sm:text-3xl font-bold">
-                    Bonjour, {{ $user->first_name ?? $user->name }} 👋
+                    {{ __('dashboard.welcome', ['name' => $user->first_name ?? $user->name]) }}
                 </h1>
-                <p class="text-slate-400 text-sm mt-1">Prêt à travailler aujourd'hui ?</p>
+                <p class="text-slate-400 text-sm mt-1">{{ __('dashboard.ready_to_work') }}</p>
             </div>
             <div class="flex flex-wrap gap-3">
                 @php
@@ -25,20 +25,20 @@
                 @endphp
                 <a href="{{ route('messages.index') }}" class="relative px-4 py-2 rounded-full border border-slate-700 hover:border-amber-400 text-sm text-slate-200 hover:text-amber-300 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                    Messagerie
+                    {{ __('dashboard.messaging') }}
                     @if($unreadMsgCount > 0)
                         <span class="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 text-slate-950 text-[9px] font-black rounded-full flex items-center justify-center">{{ $unreadMsgCount }}</span>
                     @endif
                 </a>
                 <a href="{{ route('medical.edit') }}" class="px-4 py-2 rounded-full border border-emerald-700/50 hover:border-emerald-400 bg-emerald-950/30 text-sm text-emerald-400 font-medium transition flex items-center gap-2" title="Espace sécurisé AES-256">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    Dossier Médical
+                    {{ __('dashboard.medical_folder') }}
                 </a>
                 <a href="{{ route('profile.edit') }}" class="px-4 py-2 rounded-full border border-slate-700 hover:border-amber-400 text-sm text-slate-200 hover:text-amber-300 transition">
-                    Éditer mon profil
+                    {{ __('dashboard.edit_my_profile') }}
                 </a>
                 <a href="{{ route('profile.show', $user->id) }}" class="px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-sm transition">
-                    Voir mon profil public
+                    {{ __('dashboard.view_public_profile') }}
                 </a>
             </div>
         </div>
@@ -64,7 +64,7 @@
                         @endif
                         <div>
                             <p class="font-bold text-lg">{{ $player ? $player->first_name . ' ' . $player->last_name : $user->name }}</p>
-                            <p class="text-slate-400 text-sm">{{ $player->position ?? 'Poste non renseigné' }}</p>
+                            <p class="text-slate-400 text-sm">{{ $player->position ?? __('dashboard.position_not_specified') }}</p>
                             @if($player && $player->current_club)
                                 <p class="text-amber-400 text-xs font-semibold">{{ $player->current_club }}</p>
                             @endif
@@ -74,7 +74,7 @@
                     {{-- Barre de progression --}}
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Complétion du profil</p>
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">{{ __('dashboard.profile_completion') }}</p>
                             <p class="text-sm font-bold {{ $completionPercent >= 70 ? 'text-green-400' : 'text-amber-400' }}">{{ $completionPercent }}%</p>
                         </div>
                         <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
@@ -83,7 +83,7 @@
                         </div>
                         @if($completionPercent < 100)
                             <a href="{{ route('profile.edit') }}" class="text-xs text-amber-400 hover:text-amber-300 mt-2 inline-block">
-                                Compléter mon profil →
+                                {{ __('dashboard.complete_my_profile') }}
                             </a>
                         @endif
                     </div>
@@ -92,8 +92,8 @@
                 {{-- Radar de performance --}}
                 <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 overflow-hidden">
                     <div class="flex items-center justify-between mb-4">
-                        <p class="text-sm font-semibold text-slate-200">Mon Radar</p>
-                        <span class="text-[10px] text-amber-500 font-bold uppercase tracking-wider">Performance</span>
+                        <p class="text-sm font-semibold text-slate-200">{{ __('dashboard.my_radar') }}</p>
+                        <span class="text-[10px] text-amber-500 font-bold uppercase tracking-wider">{{ __('dashboard.radar_performance') }}</span>
                     </div>
 
                     @php
@@ -128,7 +128,7 @@
                         @for($i = 0; $i < $n; $i++)
                             @php $angle = (M_PI * 2 / $n) * $i - M_PI / 2; @endphp
                             <line x1="{{ $cx }}" y1="{{ $cy }}" x2="{{ $cx + $r * cos($angle) }}" y2="{{ $cy + $r * sin($angle) }}" stroke="#334155" stroke-width="1"/>
-                            <text x="{{ $cx + ($r + 14) * cos($angle) }}" y="{{ $cy + ($r + 14) * sin($angle) + 4 }}" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Inter, sans-serif">{{ $labels[$i] }}</text>
+                            <text x="{{ $cx + ($r + 14) * cos($angle) }}" y="{{ $cy + ($r + 14) * sin($angle) + 4 }}" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Inter, sans-serif">{{ __('dashboard.radar_labels.' . $labels[$i]) }}</text>
                         @endfor
                         <polygon points="{{ $polygon }}" fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="1.5" class="bff-animate-radar"/>
                         @foreach($points as $pt)
@@ -140,14 +140,14 @@
                     <div class="grid grid-cols-3 gap-2 mt-3">
                         @foreach($radarData as $label => $val)
                             <div class="text-center">
-                                <p class="text-[9px] text-slate-500 uppercase">{{ $label }}</p>
+                                <p class="text-[9px] text-slate-500 uppercase">{{ __('dashboard.radar_labels.' . $label) }}</p>
                                 <p class="text-xs font-bold text-amber-400">{{ $val / 10 }}/10</p>
                             </div>
                         @endforeach
                     </div>
 
                     <a href="{{ route('profile.edit') }}" class="text-xs text-slate-500 hover:text-amber-400 transition mt-3 block text-center">
-                        Modifier mes notes →
+                        {{ __('dashboard.modify_notes') }}
                     </a>
                 </div>
 
@@ -167,11 +167,11 @@
                         <div>
                             <h2 class="text-sm font-bold text-indigo-300 uppercase tracking-wider mb-4 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                                Mon Audience
+                                {{ __('dashboard.my_audience') }}
                             </h2>
                             <div class="flex items-baseline gap-2">
                                 <span class="text-4xl sm:text-5xl font-black text-white">{{ $viewsCount }}</span>
-                                <span class="text-sm text-slate-400 font-semibold">vues de profil</span>
+                                <span class="text-sm text-slate-400 font-semibold">{{ __('dashboard.profile_views') }}</span>
                             </div>
                         </div>
                         
@@ -180,11 +180,11 @@
                         <div>
                             <h2 class="text-sm font-bold text-amber-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                                Favoris Recruteurs
+                                {{ __('dashboard.recruiter_favorites') }}
                             </h2>
                             <div class="flex items-baseline gap-2">
                                 <span class="text-4xl sm:text-5xl font-black text-white">{{ $favoritedCount }}</span>
-                                <span class="text-sm text-slate-400 font-semibold">ajouts</span>
+                                <span class="text-sm text-slate-400 font-semibold">{{ __('dashboard.adds') }}</span>
                             </div>
                         </div>
                     </div>
@@ -193,12 +193,12 @@
                         <div>
                             <h2 class="text-sm font-bold text-indigo-300 uppercase tracking-wider mb-2 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                Mon Audience (Premium)
+                                {{ __('dashboard.my_audience_premium') }}
                             </h2>
-                            <p class="text-xs sm:text-sm text-slate-400">Découvrez qui consulte votre profil et combien de recruteurs vous ont ajouté à leurs favoris.</p>
+                            <p class="text-xs sm:text-sm text-slate-400">{{ __('dashboard.my_audience_premium_desc') }}</p>
                         </div>
                         <a href="{{ route('pricing') }}" class="flex-shrink-0 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition">
-                            Débloquer
+                            {{ __('dashboard.unlock') }}
                         </a>
                     </div>
                     @endif
@@ -208,19 +208,19 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 sm:p-4 text-center">
                         <p class="text-2xl font-black text-amber-400">{{ $player->matches_played ?? '—' }}</p>
-                        <p class="text-xs text-slate-400 mt-1">Matchs</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ __('dashboard.matches') }}</p>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center">
                         <p class="text-2xl font-black text-amber-400">{{ $player->goals_scored ?? '—' }}</p>
-                        <p class="text-xs text-slate-400 mt-1">Buts</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ __('dashboard.goals') }}</p>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center">
                         <p class="text-2xl font-black text-amber-400">{{ $player->assists ?? '—' }}</p>
-                        <p class="text-xs text-slate-400 mt-1">Passes D.</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ __('dashboard.assists') }}</p>
                     </div>
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 text-center">
                         <p class="text-2xl font-black text-amber-400">{{ $completionPercent }}%</p>
-                        <p class="text-xs text-slate-400 mt-1">Profil</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ __('dashboard.profile') }}</p>
                     </div>
                 </div>
 
@@ -232,10 +232,10 @@
                             <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         </div>
                         <div class="flex-1">
-                            <p class="font-semibold text-sm text-amber-300 mb-1">Ton profil est à {{ $completionPercent }}%</p>
-                            <p class="text-xs text-slate-400">Un profil complet est 3x plus consulté par les recruteurs. Il te manque quelques informations clés.</p>
+                            <p class="font-semibold text-sm text-amber-300 mb-1">{{ __('dashboard.profile_incomplete_warning', ['percent' => $completionPercent]) }}</p>
+                            <p class="text-xs text-slate-400">{{ __('dashboard.profile_incomplete_desc') }}</p>
                             <a href="{{ route('profile.edit') }}" class="inline-block mt-3 px-4 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition">
-                                Compléter maintenant →
+                                {{ __('dashboard.complete_now') }}
                             </a>
                         </div>
                     </div>
@@ -245,12 +245,12 @@
                 {{-- Articles recommandés --}}
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="font-bold text-lg">Articles recommandés</h2>
-                        <a href="{{ route('articles.index') }}" class="text-xs text-amber-400 hover:text-amber-300">Voir tout →</a>
+                        <h2 class="font-bold text-lg">{{ __('dashboard.recommended_articles') }}</h2>
+                        <a href="{{ route('articles.index') }}" class="text-xs text-amber-400 hover:text-amber-300">{{ __('dashboard.view_all') }}</a>
                     </div>
 
                     @if($articles->isEmpty())
-                        <p class="text-slate-500 text-sm">Aucun article disponible pour l'instant.</p>
+                        <p class="text-slate-500 text-sm">{{ __('dashboard.no_articles') }}</p>
                     @else
                         <div class="space-y-4">
                             @foreach($articles as $article)
@@ -265,7 +265,7 @@
                                     <div class="flex-1 min-w-0">
                                         <p class="text-[10px] text-amber-500 font-bold uppercase tracking-wider mb-1">{{ $article->category }}</p>
                                         <p class="font-semibold text-sm text-white group-hover:text-amber-300 transition truncate">{{ $article->title }}</p>
-                                        <p class="text-xs text-slate-400 mt-1">{{ $article->reading_time }} min de lecture</p>
+                                        <p class="text-xs text-slate-400 mt-1">{{ __('dashboard.reading_time', ['time' => $article->reading_time]) }}</p>
                                     </div>
                                     <svg class="w-4 h-4 text-slate-600 group-hover:text-amber-400 transition flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                                 </a>

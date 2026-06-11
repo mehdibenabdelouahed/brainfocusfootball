@@ -20,7 +20,7 @@ class NewsletterWelcome extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '🧠 Bienvenue dans la communauté Brain Focus Football !',
+            subject: __('emails.newsletter_subject'),
         );
     }
 

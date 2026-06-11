@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Un recruteur s'intéresse à vous !</title>
+    <title>{{ __('emails.player_fav_subject') }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #0f172a; font-family: 'Inter', Arial, sans-serif; color: #e2e8f0; }
@@ -33,52 +33,50 @@
 <div class="wrapper">
     <div class="card">
         <div class="hero">
-            <span class="hero-badge">Brain Focus Football</span>
+            <span class="hero-badge">{{ __('emails.player_fav_hero_badge') }}</span>
             <span class="star-icon">⭐</span>
-            <h1>Votre profil a été mis en favori !</h1>
-            <p>Bonne nouvelle, {{ $player->first_name }} ! Un recruteur professionnel vient d'ajouter votre profil à sa liste de talents surveillés.</p>
+            <h1>{{ __('emails.player_fav_header') }}</h1>
+            <p>{{ __('emails.player_fav_body', ['name' => $player->first_name]) }}</p>
         </div>
 
         <div class="body">
             <div class="highlight-box">
-                <div class="label">Organisation intéressée</div>
-                <div class="value">{{ $recruiter->org_name ?? 'Un recruteur professionnel' }}</div>
+                <div class="label">{{ __('emails.player_fav_interested_org') }}</div>
+                <div class="value">{{ $recruiter->org_name ?? __('emails.player_fav_pro_recruiter') }}</div>
             </div>
 
             <div class="info-grid">
                 <div class="info-item">
-                    <div class="label">Votre poste</div>
-                    <div class="value">{{ $player->position ?? 'Non renseigné' }}</div>
+                    <div class="label">{{ __('emails.player_fav_your_position') }}</div>
+                    <div class="value">{{ $player->position ?? __('profile.not_specified') }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="label">Votre club</div>
-                    <div class="value">{{ $player->current_club ?? 'Sans club' }}</div>
+                    <div class="label">{{ __('emails.player_fav_your_club') }}</div>
+                    <div class="value">{{ $player->current_club ?? __('profile.no_club') }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="label">Ajouté aux favoris</div>
+                    <div class="label">{{ __('emails.player_fav_added_on') }}</div>
                     <div class="value">{{ now()->format('d/m/Y') }}</div>
                 </div>
                 <div class="info-item">
-                    <div class="label">Statut profil</div>
-                    <div class="value" style="color: #34d399;">✓ Visible</div>
+                    <div class="label">{{ __('emails.player_fav_profile_status') }}</div>
+                    <div class="value" style="color: #34d399;">{{ __('emails.player_fav_visible') }}</div>
                 </div>
             </div>
 
             <p style="color: #94a3b8; font-size: 14px; line-height: 1.8; margin-bottom: 24px;">
-                🎯 Un recruteur qui met un profil en favori est en phase d'évaluation active. 
-                Assurez-vous que votre profil est complet et à jour pour maximiser vos chances d'être contacté.
+                {{ __('emails.player_fav_info_tip') }}
             </p>
 
             <div class="cta-section">
-                <a href="{{ url('/profil/' . $player->user_id) }}" class="cta-button">
-                    Voir mon profil public →
+                <a href="{{ route('profile.show', $player->user_id) }}" class="cta-button">
+                    {{ __('emails.player_fav_btn') }}
                 </a>
             </div>
         </div>
 
         <div class="footer">
-            <p>Vous recevez cet e-mail car un recruteur a interagi avec votre profil sur <strong>Brain Focus Football</strong>.<br>
-            Cette notification vous a été envoyée automatiquement. Vous ne pouvez pas répondre à cet e-mail.</p>
+            <p>{!! __('emails.player_fav_footer') !!}</p>
         </div>
     </div>
 </div>

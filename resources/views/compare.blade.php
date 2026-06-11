@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Comparateur de Talents - BFF')
+@section('title', __('profile.compare_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white pb-20">
@@ -11,12 +11,12 @@
         <div class="flex items-center justify-between mb-12">
             <div>
                 <h1 class="text-4xl font-black mb-2 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-                    Comparateur de Talents
+                    {{ __('profile.compare_header') }}
                 </h1>
-                <p class="text-slate-400">Analyse comparative des performances mentales et techniques.</p>
+                <p class="text-slate-400">{{ __('profile.compare_subheader') }}</p>
             </div>
             <a href="{{ route('talents') }}" class="px-6 py-3 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-800 transition text-sm font-bold">
-                ← Retour à la galerie
+                {{ __('profile.back_to_gallery') }}
             </a>
         </div>
 
@@ -39,7 +39,7 @@
                         </div>
                         <h2 class="text-2xl font-bold mb-1">{{ $player->first_name }} {{ $player->last_name }}</h2>
                         <p class="text-amber-500 font-bold text-sm uppercase tracking-widest">{{ $player->position }}</p>
-                        <p class="text-slate-500 text-xs mt-1">{{ $player->current_club ?? 'Sans club' }}</p>
+                        <p class="text-slate-500 text-xs mt-1">{{ $player->current_club ?? __('profile.no_club') }}</p>
                     </div>
 
                     {{-- Radar --}}
@@ -89,12 +89,12 @@
                             
                             {{-- Labels --}}
                             <div class="absolute inset-0 pointer-events-none text-[7px] font-black text-slate-400">
-                                <span class="absolute top-0 left-1/2 -translate-x-1/2 text-amber-500 uppercase tracking-widest">Mental</span>
-                                <span class="absolute top-1/4 right-0 translate-x-2 uppercase">Physique</span>
-                                <span class="absolute bottom-1/4 right-0 translate-x-2 uppercase">Technique</span>
-                                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 uppercase">Vision</span>
-                                <span class="absolute bottom-1/4 left-0 -translate-x-2 uppercase">Vitesse</span>
-                                <span class="absolute top-1/4 left-0 -translate-x-2 uppercase">Social</span>
+                                <span class="absolute top-0 left-1/2 -translate-x-1/2 text-amber-500 uppercase tracking-widest">{{ __('dashboard.radar_labels.Mental') }}</span>
+                                <span class="absolute top-1/4 right-0 translate-x-2 uppercase">{{ __('dashboard.radar_labels.Physique') }}</span>
+                                <span class="absolute bottom-1/4 right-0 translate-x-2 uppercase">{{ __('dashboard.radar_labels.Technique') }}</span>
+                                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 uppercase">{{ __('dashboard.radar_labels.Vision') }}</span>
+                                <span class="absolute bottom-1/4 left-0 -translate-x-2 uppercase">{{ __('dashboard.radar_labels.Vitesse') }}</span>
+                                <span class="absolute top-1/4 left-0 -translate-x-2 uppercase">{{ __('dashboard.radar_labels.Social') }}</span>
                             </div>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         @foreach(['mental' => 'Mental', 'physique' => 'Physique', 'technique' => 'Technique', 'vitesse' => 'Vitesse', 'vision' => 'Vision', 'social' => 'Social'] as $key => $label)
                             <div>
                                 <div class="flex justify-between items-end mb-1">
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{{ $label }}</span>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{{ __('dashboard.radar_labels.' . ucfirst($key)) }}</span>
                                     <span class="text-xs font-black text-amber-500">{{ $player->{'radar_'.$key} ?? 0 }}/10</span>
                                 </div>
                                 <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
@@ -117,26 +117,30 @@
                     {{-- Stats Physiques --}}
                     <div class="mt-8 pt-8 border-t border-slate-800 grid grid-cols-2 gap-4">
                         <div class="bg-slate-800/30 p-3 rounded-xl text-center">
-                            <span class="block text-[10px] text-slate-500 uppercase mb-1">Âge</span>
-                            <span class="font-bold">{{ $player->date_of_birth ? \Carbon\Carbon::parse($player->date_of_birth)->age : '-' }} ans</span>
+                            <span class="block text-[10px] text-slate-500 uppercase mb-1">{{ __('profile.age') }}</span>
+                            <span class="font-bold">
+                                {{ $player->date_of_birth ? __('profile.age_years', ['age' => \Carbon\Carbon::parse($player->date_of_birth)->age]) : '-' }}
+                            </span>
                         </div>
                         <div class="bg-slate-800/30 p-3 rounded-xl text-center">
-                            <span class="block text-[10px] text-slate-500 uppercase mb-1">Taille</span>
+                            <span class="block text-[10px] text-slate-500 uppercase mb-1">{{ __('profile.height_label') }}</span>
                             <span class="font-bold">{{ $player->height ?? '-' }} cm</span>
                         </div>
                         <div class="bg-slate-800/30 p-3 rounded-xl text-center">
-                            <span class="block text-[10px] text-slate-500 uppercase mb-1">Pied</span>
-                            <span class="font-bold">{{ $player->preferred_foot ?? '-' }}</span>
+                            <span class="block text-[10px] text-slate-500 uppercase mb-1">{{ __('profile.preferred_foot') }}</span>
+                            <span class="font-bold">
+                                {{ $player->preferred_foot ? ($player->preferred_foot === 'Droit' ? __('profile.foot_right') : ($player->preferred_foot === 'Gauche' ? __('profile.foot_left') : __('profile.foot_ambidextrous'))) : '-' }}
+                            </span>
                         </div>
                         <div class="bg-slate-800/30 p-3 rounded-xl text-center">
-                            <span class="block text-[10px] text-slate-500 uppercase mb-1">Poids</span>
+                            <span class="block text-[10px] text-slate-500 uppercase mb-1">{{ __('profile.weight_label') }}</span>
                             <span class="font-bold">{{ $player->weight ?? '-' }} kg</span>
                         </div>
                     </div>
 
                     <div class="mt-8">
                         <a href="{{ route('profile.show', $player->id) }}" class="block w-full py-3 text-center rounded-xl bg-slate-800 hover:bg-slate-700 transition text-sm font-bold">
-                            Voir le profil complet
+                            {{ __('profile.full_profile_btn') }}
                         </a>
                     </div>
                 </div>

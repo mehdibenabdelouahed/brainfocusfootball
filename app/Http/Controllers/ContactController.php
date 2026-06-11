@@ -25,6 +25,6 @@ class ContactController extends Controller
 
         Mail::to('contact@brainfocusfootball.be')->send(new ContactMail($data));
 
-        return back()->with('success', 'Votre message a bien été envoyé ! Nous vous répondrons dans les plus brefs délais.');
+        return back()->with('success', __('contact.success'));
     }
 }

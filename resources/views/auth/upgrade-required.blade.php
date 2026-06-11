@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mise à niveau requise — Brain Focus Football')
+@section('title', __('pricing.upgrade_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4">
@@ -16,10 +16,10 @@
         </div>
 
         <h1 class="text-3xl sm:text-4xl font-black mb-4">
-            Passez au <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-600">niveau supérieur</span>
+            {!! __('pricing.upgrade_header') !!}
         </h1>
         <p class="text-slate-400 text-sm sm:text-base mb-4 max-w-md mx-auto leading-relaxed">
-            Cette fonctionnalité nécessite un abonnement supérieur à votre plan actuel.
+            {{ __('pricing.upgrade_subheader') }}
         </p>
 
         @if(session('error'))
@@ -39,7 +39,7 @@
                 ];
             @endphp
             <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-4 mb-8 inline-block">
-                <p class="text-xs text-slate-500 uppercase tracking-widest mb-1">Votre plan actuel</p>
+                <p class="text-xs text-slate-500 uppercase tracking-widest mb-1">{{ __('pricing.your_current_plan') }}</p>
                 <p class="text-lg font-black {{ $planColors[$plan] ?? 'text-slate-300' }}">{{ $plan }}</p>
             </div>
         @endauth
@@ -47,33 +47,33 @@
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
             <a href="{{ route('pricing') }}" 
                class="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20 active:scale-95">
-                Voir les tarifs
+                {{ __('pricing.view_pricing_btn') }}
             </a>
             <a href="{{ url()->previous() }}" 
                class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-300 hover:text-white font-bold text-sm transition">
-                Retour
+                {{ __('pricing.back_btn') }}
             </a>
         </div>
 
         {{-- Features du plan supérieur --}}
         <div class="mt-12 bg-slate-900/30 border border-slate-800 rounded-2xl p-6 text-left">
-            <h3 class="text-sm font-bold text-amber-400 uppercase tracking-widest mb-4">Ce que vous débloquez</h3>
+            <h3 class="text-sm font-bold text-amber-400 uppercase tracking-widest mb-4">{{ __('pricing.what_you_unlock') }}</h3>
             <div class="space-y-3">
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-sm text-slate-300">Consultation illimitée de profils joueurs</span>
+                    <span class="text-sm text-slate-300">{{ __('pricing.unlock_feature_1') }}</span>
                 </div>
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-sm text-slate-300">Recherche avancée avec filtres Radar</span>
+                    <span class="text-sm text-slate-300">{{ __('pricing.unlock_feature_2') }}</span>
                 </div>
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-sm text-slate-300">Contact direct avec les joueurs</span>
+                    <span class="text-sm text-slate-300">{{ __('pricing.unlock_feature_3') }}</span>
                 </div>
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                    <span class="text-sm text-slate-300">Comparateur de talents & Shortlists</span>
+                    <span class="text-sm text-slate-300">{{ __('pricing.unlock_feature_4') }}</span>
                 </div>
             </div>
         </div>

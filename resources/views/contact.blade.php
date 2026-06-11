@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Contact - Brain Focus Football')
+@section('title', __('contact.meta_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white">
@@ -13,11 +13,10 @@
         {{-- En-tête --}}
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                Contactez-nous
+                {{ __('contact.title') }}
             </h1>
             <p class="text-slate-400 max-w-2xl mx-auto">
-                Une question ? Un partenariat ? Ou simplement envie de discuter football ?
-                N'hésitez pas à nous envoyer un message.
+                {{ __('contact.subtitle') }}
             </p>
         </div>
 
@@ -35,36 +34,36 @@
                     
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-slate-300 mb-2">Nom complet</label>
+                            <label for="name" class="block text-sm font-medium text-slate-300 mb-2">{{ __('contact.name_label') }}</label>
                             <input type="text" id="name" name="name" required
                                 class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                                placeholder="Votre nom">
+                                placeholder="{{ __('contact.name_placeholder') }}">
                         </div>
                         <div>
-                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">{{ __('common.email') ?? 'Email' }}</label>
                             <input type="email" id="email" name="email" required
                                 class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                                placeholder="votre@email.com">
+                                placeholder="{{ __('contact.email_placeholder') }}">
                         </div>
                     </div>
 
                     <div>
-                        <label for="subject" class="block text-sm font-medium text-slate-300 mb-2">Sujet</label>
+                        <label for="subject" class="block text-sm font-medium text-slate-300 mb-2">{{ __('contact.subject_label') }}</label>
                         <input type="text" id="subject" name="subject" required
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Le sujet de votre message">
+                            placeholder="{{ __('contact.subject_placeholder') }}">
                     </div>
 
                     <div>
-                        <label for="message" class="block text-sm font-medium text-slate-300 mb-2">Message</label>
+                        <label for="message" class="block text-sm font-medium text-slate-300 mb-2">{{ __('contact.message_label') }}</label>
                         <textarea id="message" name="message" rows="6" required
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Votre message..."></textarea>
+                            placeholder="{{ __('contact.message_placeholder') }}"></textarea>
                     </div>
 
                     <button type="submit"
                         class="w-full px-6 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/30 transition transform hover:scale-[1.02] active:scale-[0.98]">
-                        Envoyer le message
+                        {{ __('contact.send_button') }}
                     </button>
                 </form>
             </div>
@@ -73,7 +72,7 @@
             <div class="space-y-8">
                 {{-- Info Box --}}
                 <div class="bg-slate-900/30 border border-slate-800 rounded-2xl p-8">
-                    <h3 class="text-xl font-bold text-white mb-6">Informations</h3>
+                    <h3 class="text-xl font-bold text-white mb-6">{{ __('contact.info_title') }}</h3>
                     
                     <div class="space-y-6">
                         <div class="flex items-start gap-4">
@@ -85,7 +84,7 @@
                             <div>
                                 <h4 class="font-semibold text-slate-200">Email</h4>
                                 <p class="text-slate-400">contact@brainfocusfootball.be</p>
-                                <p class="text-slate-500 text-sm mt-1">Réponse sous 24-48h</p>
+                                <p class="text-slate-500 text-sm mt-1">{{ __('contact.email_response') }}</p>
                             </div>
                         </div>
 

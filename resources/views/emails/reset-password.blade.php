@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réinitialisation de mot de passe</title>
+    <title>{{ __('emails.reset_password_subject') }}</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -74,31 +74,31 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔐 Réinitialisation de mot de passe</h1>
+            <h1>{{ __('emails.reset_password_header') }}</h1>
         </div>
         <div class="content">
-            <p>Bonjour,</p>
-            <p>Vous avez demandé à réinitialiser votre mot de passe pour votre compte BrainFocusFootball.</p>
-            <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+            <p>{{ __('emails.reset_password_hello') }}</p>
+            <p>{{ __('emails.reset_password_body_1') }}</p>
+            <p>{{ __('emails.reset_password_body_2') }}</p>
             
             <center>
                 <a href="{{ route('password.reset', ['token' => $token, 'email' => $email]) }}" class="button">
-                    Réinitialiser mon mot de passe
+                    {{ __('emails.reset_password_btn') }}
                 </a>
             </center>
 
             <div class="warning">
-                <p><strong>⚠️ Important :</strong> Ce lien est valable pendant 60 minutes. Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                <p>{!! __('emails.reset_password_warning') !!}</p>
             </div>
 
-            <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+            <p>{{ __('emails.reset_password_fallback') }}</p>
             <p style="word-break: break-all; color: #667eea;">
                 {{ route('password.reset', ['token' => $token, 'email' => $email]) }}
             </p>
         </div>
         <div class="footer">
-            <p>© {{ date('Y') }} BrainFocusFootball. Tous droits réservés.</p>
-            <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+            <p>© {{ date('Y') }} BrainFocusFootball. {{ __('emails.all_rights_reserved') }}</p>
+            <p>{{ __('emails.auto_email_footer') }}</p>
         </div>
     </div>
 </body>

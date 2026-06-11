@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Éditer mon profil - Brain Focus Football')
+@section('title', __('profile.edit_title'))
 
 @section('content')
 <div class="min-h-screen bg-slate-950 text-white px-4 py-12 relative">
@@ -10,8 +10,8 @@
     <div class="max-w-4xl mx-auto">
         {{-- En-tête --}}
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">Éditer mon profil joueur</h1>
-            <p class="text-slate-400 text-sm">Mets à jour tes informations pour rester visible auprès des clubs et agents</p>
+            <h1 class="text-3xl font-bold mb-2">{{ __('profile.edit_header') }}</h1>
+            <p class="text-slate-400 text-sm">{{ __('profile.edit_subheader') }}</p>
         </div>
 
         {{-- Message de succès --}}
@@ -24,7 +24,7 @@
         {{-- Erreurs de validation --}}
         @if ($errors->any())
             <div class="mb-6 bg-red-500/10 border border-red-500/50 rounded-xl p-4">
-                <p class="text-red-400 text-sm font-semibold mb-2">Erreurs dans le formulaire</p>
+                <p class="text-red-400 text-sm font-semibold mb-2">{{ __('profile.validation_errors') }}</p>
                 <ul class="text-red-300 text-xs space-y-1">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -42,44 +42,44 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">1</span>
-                    Informations personnelles
+                    {{ __('profile.personal_info') }}
                 </h2>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label for="first_name" class="block text-sm font-medium text-slate-300 mb-2">Prénom</label>
+                        <label for="first_name" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.first_name') }}</label>
                         <input type="text" id="first_name" name="first_name" value="{{ old('first_name', Auth::user()->player?->first_name) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="Mehdi">
                     </div>
                     <div>
-                        <label for="last_name" class="block text-sm font-medium text-slate-300 mb-2">Nom</label>
+                        <label for="last_name" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.last_name') }}</label>
                         <input type="text" id="last_name" name="last_name" value="{{ old('last_name', Auth::user()->player?->last_name) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="Ben Abdelouahed">
                     </div>
                     <div>
-                        <label for="date_of_birth" class="block text-sm font-medium text-slate-300 mb-2">Date de naissance</label>
+                        <label for="date_of_birth" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.date_of_birth') }}</label>
                         <input type="date" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', Auth::user()->player?->date_of_birth?->format('Y-m-d')) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
                     </div>
                     <div>
-                        <label for="phone" class="block text-sm font-medium text-slate-300 mb-2">Téléphone</label>
+                        <label for="phone" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.phone') }}</label>
                         <input type="tel" id="phone" name="phone" value="{{ old('phone', Auth::user()->player?->phone) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="+33 6 12 34 56 78">
                     </div>
                     <div class="md:col-span-2">
-                        <label for="profile_photo" class="block text-sm font-medium text-slate-300 mb-2">Photo de profil</label>
+                        <label for="profile_photo" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.profile_photo') }}</label>
                         @if(Auth::user()->player?->profile_photo)
                             <div class="mb-2">
                                 <img src="{{ asset('storage/' . Auth::user()->player->profile_photo) }}" alt="Photo actuelle" class="w-20 h-20 rounded-full object-cover border-2 border-amber-500">
-                                <p class="text-xs text-slate-400 mt-1">Photo actuelle</p>
+                                <p class="text-xs text-slate-400 mt-1">{{ __('profile.current_photo') }}</p>
                             </div>
                         @endif
                         <input type="file" id="profile_photo" name="profile_photo" accept="image/*"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
-                        <p class="mt-1 text-xs text-slate-400">Format: JPG, PNG. Max 2MB. Laisse vide pour garder la photo actuelle.</p>
+                        <p class="mt-1 text-xs text-slate-400">{{ __('profile.photo_hint_edit') }}</p>
                     </div>
                 </div>
             </div>
@@ -88,55 +88,55 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">2</span>
-                    Informations sportives
+                    {{ __('profile.sports_info') }}
                 </h2>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label for="position" class="block text-sm font-medium text-slate-300 mb-2">Poste</label>
+                        <label for="position" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.position') }}</label>
                         <input type="text" id="position" name="position" value="{{ old('position', Auth::user()->player?->position) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Ex: Ailier droit, Meneur de jeu">
+                            placeholder="{{ __('profile.position_placeholder') }}">
                     </div>
                     <div>
-                        <label for="dominant_foot" class="block text-sm font-medium text-slate-300 mb-2">Pied fort</label>
+                        <label for="dominant_foot" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.preferred_foot') }}</label>
                         <select id="dominant_foot" name="dominant_foot"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
-                            <option value="">Sélectionner...</option>
-                            <option value="Droit" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Droit' ? 'selected' : '' }}>Droit</option>
-                            <option value="Gauche" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Gauche' ? 'selected' : '' }}>Gauche</option>
-                            <option value="Ambidextre" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Ambidextre' ? 'selected' : '' }}>Ambidextre</option>
+                            <option value="">{{ __('profile.select') }}</option>
+                            <option value="Droit" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Droit' ? 'selected' : '' }}>{{ __('profile.foot_right') }}</option>
+                            <option value="Gauche" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Gauche' ? 'selected' : '' }}>{{ __('profile.foot_left') }}</option>
+                            <option value="Ambidextre" {{ old('dominant_foot', Auth::user()->player?->dominant_foot) == 'Ambidextre' ? 'selected' : '' }}>{{ __('profile.foot_ambidextrous') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label for="height_cm" class="block text-sm font-medium text-slate-300 mb-2">Taille (cm)</label>
+                        <label for="height_cm" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.height') }}</label>
                         <input type="number" id="height_cm" name="height_cm" value="{{ old('height_cm', Auth::user()->player?->height_cm) }}" min="100" max="250"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="175">
                     </div>
                     <div>
-                        <label for="weight_kg" class="block text-sm font-medium text-slate-300 mb-2">Poids (kg)</label>
+                        <label for="weight_kg" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.weight') }}</label>
                         <input type="number" id="weight_kg" name="weight_kg" value="{{ old('weight_kg', Auth::user()->player?->weight_kg) }}" min="30" max="150"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="70">
                     </div>
                     <div>
-                        <label for="current_club" class="block text-sm font-medium text-slate-300 mb-2">Club actuel</label>
+                        <label for="current_club" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.current_club') }}</label>
                         <input type="text" id="current_club" name="current_club" value="{{ old('current_club', Auth::user()->player?->current_club) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Ex: RSC Anderlecht">
+                            placeholder="{{ __('profile.club_placeholder') }}">
                     </div>
                     <div>
-                        <label for="level" class="block text-sm font-medium text-slate-300 mb-2">Niveau</label>
+                        <label for="level" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.level') }}</label>
                         <input type="text" id="level" name="level" value="{{ old('level', Auth::user()->player?->level) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Ex: U19 Élite, Senior Amateur">
+                            placeholder="{{ __('profile.level_placeholder') }}">
                     </div>
                     <div>
-                        <label for="jersey_number" class="block text-sm font-medium text-slate-300 mb-2">Numéro de maillot</label>
+                        <label for="jersey_number" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.jersey_number') }}</label>
                         <input type="number" id="jersey_number" name="jersey_number" value="{{ old('jersey_number', Auth::user()->player?->jersey_number) }}" min="1" max="99"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="10">
+                            placeholder="{{ __('profile.jersey_placeholder') }}">
                     </div>
                 </div>
             </div>
@@ -145,47 +145,47 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">3</span>
-                    Médias
+                    {{ __('profile.media') }}
                 </h2>
 
                 <div class="space-y-4">
-                    <div>
-                        <label for="main_video_url" class="block text-sm font-medium text-slate-300 mb-2">Vidéo principale (URL)</label>
+                                   <label for="main_video_url" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.main_video_url') }}</label>
                         <input type="url" id="main_video_url" name="main_video_url" value="{{ old('main_video_url', Auth::user()->player?->main_video_url) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="https://youtube.com/watch?v=...">
-                        <p class="mt-1 text-xs text-slate-400">YouTube, Vimeo, ou lien direct vers ta vidéo</p>
+                        <p class="mt-1 text-xs text-slate-400">{{ __('profile.video_url_hint') }}</p>
                     </div>
-
+ 
                     <div class="relative my-4">
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-slate-700"></div>
                         </div>
                         <div class="relative flex justify-center text-xs">
-                            <span class="px-3 bg-slate-900 text-slate-400">OU</span>
+                            <span class="px-3 bg-slate-900 text-slate-400">{{ __('profile.or') }}</span>
                         </div>
                     </div>
-
+ 
                     <div>
-                        <label for="main_video_file" class="block text-sm font-medium text-slate-300 mb-2">Télécharger une vidéo (MP4, MOV)</label>
+                        <label for="main_video_file" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.upload_video') }}</label>
                         @if(Auth::user()->player?->main_video_file)
                             <div class="mb-2 p-2 bg-slate-800 rounded-lg border border-slate-700 flex items-center gap-2">
                                 <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
-                                <span class="text-xs text-slate-300">Vidéo actuelle téléchargée</span>
+                                <span class="text-xs text-slate-300">{{ __('profile.current_video') }}</span>
                             </div>
                         @endif
                         <input type="file" id="main_video_file" name="main_video_file" accept="video/mp4,video/quicktime,video/x-msvideo"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 transition">
-                        <p class="mt-1 text-xs text-slate-400">Max 50MB. Si une vidéo est téléchargée, elle sera prioritaire sur l'URL.</p>
+                        <p class="mt-1 text-xs text-slate-400">{{ __('profile.video_hint') }}</p>
                     </div>
                     <div>
-                        <label for="bio" class="block text-sm font-medium text-slate-300 mb-2">Description / Bio</label>
+                        <label for="bio" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.bio') }}</label>
                         <textarea id="bio" name="bio" rows="4"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
-                            placeholder="Décris ton style de jeu, tes points forts, ton parcours...">{{ old('bio', Auth::user()->player?->bio) }}</textarea>
-                        <p class="mt-1 text-xs text-slate-400">Max 1000 caractères</p>
+                            placeholder="{{ __('profile.bio_placeholder') }}">{{ old('bio', Auth::user()->player?->bio) }}</textarea>
+                        <p class="mt-1 text-xs text-slate-400">{{ __('profile.bio_hint') }}</p>
+                    </div>/p>
                     </div>
                 </div>
             </div>
@@ -194,30 +194,30 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">4</span>
-                    Statistiques
+                    {{ __('profile.stats') }}
                 </h2>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label for="season" class="block text-sm font-medium text-slate-300 mb-2">Saison</label>
+                        <label for="season" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.season') }}</label>
                         <input type="text" id="season" name="season" value="{{ old('season', Auth::user()->player?->season ?? '2024/25') }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="2024/25">
                     </div>
                     <div>
-                        <label for="matches_played" class="block text-sm font-medium text-slate-300 mb-2">Matchs joués</label>
+                        <label for="matches_played" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.matches_played') }}</label>
                         <input type="number" id="matches_played" name="matches_played" value="{{ old('matches_played', Auth::user()->player?->matches_played) }}" min="0"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="24">
                     </div>
                     <div>
-                        <label for="goals_scored" class="block text-sm font-medium text-slate-300 mb-2">Buts</label>
+                        <label for="goals_scored" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.goals_scored') }}</label>
                         <input type="number" id="goals_scored" name="goals_scored" value="{{ old('goals_scored', Auth::user()->player?->goals_scored) }}" min="0"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="9">
                     </div>
                     <div>
-                        <label for="assists" class="block text-sm font-medium text-slate-300 mb-2">Passes décisives</label>
+                        <label for="assists" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.assists') }}</label>
                         <input type="number" id="assists" name="assists" value="{{ old('assists', Auth::user()->player?->assists) }}" min="0"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="11">
@@ -229,15 +229,15 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-2 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">5</span>
-                    Radar de performance
+                    {{ __('profile.radar_title') }}
                 </h2>
-                <p class="text-xs text-slate-400 mb-6 italic">Note-toi objectivement sur 10 pour chaque catégorie. Ton radar s'adaptera automatiquement.</p>
+                <p class="text-xs text-slate-400 mb-6 italic">{{ __('profile.radar_desc') }}</p>
 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach(['mental' => 'Mental', 'physique' => 'Physique', 'technique' => 'Technique', 'vitesse' => 'Vitesse', 'vision' => 'Vision', 'social' => 'Social'] as $key => $label)
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
-                                <label for="radar_{{ $key }}" class="text-sm font-semibold text-slate-200">{{ $label }}</label>
+                                <label for="radar_{{ $key }}" class="text-sm font-semibold text-slate-200">{{ __('dashboard.radar_labels.' . $label) }}</label>
                                 <span id="val_{{ $key }}" class="text-sm font-black text-amber-500">{{ old('radar_'.$key, Auth::user()->player?->{'radar_'.$key} ?? 5) }}/10</span>
                             </div>
                             <input type="range" id="radar_{{ $key }}" name="radar_{{ $key }}" 
@@ -246,8 +246,8 @@
                                 oninput="document.getElementById('val_{{ $key }}').innerText = this.value + '/10'"
                                 class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:ring-amber-500 transition-all">
                             <div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-tighter">
-                                <span>Faible</span>
-                                <span>Élite</span>
+                                <span>{{ __('profile.radar_low') }}</span>
+                                <span>{{ __('profile.radar_elite') }}</span>
                             </div>
                         </div>
                     @endforeach
@@ -258,24 +258,24 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <h2 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-sm">6</span>
-                    Réseaux sociaux
+                    {{ __('profile.socials') }}
                 </h2>
 
                 <div class="space-y-4">
                     <div>
-                        <label for="instagram_url" class="block text-sm font-medium text-slate-300 mb-2">Instagram</label>
+                        <label for="instagram_url" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.instagram') }}</label>
                         <input type="url" id="instagram_url" name="instagram_url" value="{{ old('instagram_url', Auth::user()->player?->instagram_url) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="https://instagram.com/ton_compte">
                     </div>
                     <div>
-                        <label for="tiktok_url" class="block text-sm font-medium text-slate-300 mb-2">TikTok</label>
+                        <label for="tiktok_url" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.tiktok') }}</label>
                         <input type="url" id="tiktok_url" name="tiktok_url" value="{{ old('tiktok_url', Auth::user()->player?->tiktok_url) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="https://tiktok.com/@ton_compte">
                     </div>
                     <div>
-                        <label for="youtube_url" class="block text-sm font-medium text-slate-300 mb-2">YouTube</label>
+                        <label for="youtube_url" class="block text-sm font-medium text-slate-300 mb-2">{{ __('profile.youtube') }}</label>
                         <input type="url" id="youtube_url" name="youtube_url" value="{{ old('youtube_url', Auth::user()->player?->youtube_url) }}"
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition"
                             placeholder="https://youtube.com/@ton_compte">
@@ -287,8 +287,8 @@
             <div class="bg-slate-900/80 border border-slate-700/70 rounded-2xl p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="font-semibold text-white mb-1">Profil public</h3>
-                        <p class="text-sm text-slate-400">Ton profil sera visible par tous (clubs, agents, etc.)</p>
+                        <h3 class="font-semibold text-white mb-1">{{ __('profile.public_profile') }}</h3>
+                        <p class="text-sm text-slate-400">{{ __('profile.public_profile_desc') }}</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" name="is_public" value="1" {{ old('is_public', (Auth::user()->player?->visibility ?? 'public') === 'public') ? 'checked' : '' }} class="sr-only peer">
@@ -301,11 +301,11 @@
             <div class="flex gap-4">
                 <button type="submit"
                     class="flex-1 px-6 py-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/30 transition transform hover:scale-[1.02] active:scale-[0.98]">
-                    Enregistrer les modifications
+                    {{ __('profile.save_changes_btn') }}
                 </button>
                 <a href="{{ route('profile.show', Auth::id()) }}"
                     class="px-6 py-4 rounded-xl border border-slate-600 hover:border-amber-400 text-slate-200 hover:text-amber-300 font-semibold transition text-center">
-                    Annuler
+                    {{ __('profile.cancel') }}
                 </a>
             </div>
         </form>

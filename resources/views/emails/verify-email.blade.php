@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification d'email</title>
+    <title>{{ __('emails.verify_email_subject') }}</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -74,32 +74,32 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>✉️ Vérification de votre email</h1>
+            <h1>{{ __('emails.verify_email_header') }}</h1>
         </div>
         <div class="content">
-            <p>Bonjour <strong>{{ $user->name }}</strong>,</p>
-            <p>Bienvenue sur BrainFocusFootball! Pour finaliser votre inscription, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+            <p>{!! __('emails.verify_email_hello', ['name' => e($user->name)]) !!}</p>
+            <p>{{ __('emails.verify_email_body_1') }}</p>
             
             <center>
                 <a href="{{ $verificationUrl }}" class="button">
-                    Vérifier mon adresse email
+                    {{ __('emails.verify_email_btn') }}
                 </a>
             </center>
 
             <div class="info-box">
-                <p><strong>ℹ️ Information :</strong> Ce lien de vérification expirera dans 60 minutes.</p>
+                <p>{!! __('emails.verify_email_warning') !!}</p>
             </div>
 
-            <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+            <p>{{ __('emails.verify_email_fallback') }}</p>
             <p style="word-break: break-all; color: #667eea;">
                 {{ $verificationUrl }}
             </p>
 
-            <p>Si vous n'avez pas créé de compte sur BrainFocusFootball, ignorez simplement cet email.</p>
+            <p>{{ __('emails.verify_email_ignore_hint') }}</p>
         </div>
         <div class="footer">
-            <p>© {{ date('Y') }} BrainFocusFootball. Tous droits réservés.</p>
-            <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+            <p>© {{ date('Y') }} BrainFocusFootball. {{ __('emails.all_rights_reserved') }}</p>
+            <p>{{ __('emails.auto_email_footer') }}</p>
         </div>
     </div>
 </body>

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Réinitialiser le mot de passe')
+@section('title', __('auth.reset_meta_title'))
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
         <div class="text-center">
             <h2 class="text-3xl font-extrabold text-gray-900">
-                🔑 Nouveau mot de passe
+                {{ __('auth.reset_title') }}
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Choisissez un nouveau mot de passe sécurisé pour votre compte.
+                {{ __('auth.reset_subtitle') }}
             </p>
         </div>
 
@@ -22,7 +22,7 @@
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">
-                    Adresse email
+                    {{ __('auth.email_label') }}
                 </label>
                 <div class="mt-1">
                     <input 
@@ -40,7 +40,7 @@
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">
-                    Nouveau mot de passe
+                    {{ __('auth.new_password_label') }}
                 </label>
                 <div class="mt-1 relative">
                     <input 
@@ -50,20 +50,20 @@
                         autocomplete="new-password" 
                         required 
                         class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('password') border-red-500 @enderror"
-                        placeholder="Minimum 8 caractères"
+                        placeholder="{{ __('auth.password_min_chars') }}"
                     >
                 </div>
                 @error('password')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
                 <p class="mt-2 text-xs text-gray-500">
-                    Le mot de passe doit contenir au moins 8 caractères.
+                    {{ __('auth.password_desc') }}
                 </p>
             </div>
 
             <div>
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
-                    Confirmer le mot de passe
+                    {{ __('auth.password_confirm_label') }}
                 </label>
                 <div class="mt-1">
                     <input 
@@ -73,7 +73,7 @@
                         autocomplete="new-password" 
                         required 
                         class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Confirmez votre mot de passe"
+                        placeholder="{{ __('auth.password_confirm_placeholder') }}"
                     >
                 </div>
             </div>
@@ -105,13 +105,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                         </svg>
                     </span>
-                    Réinitialiser le mot de passe
+                    {{ __('auth.reset_password_button') }}
                 </button>
             </div>
 
             <div class="text-center">
                 <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-                    ← Retour à la connexion
+                    ← {{ __('auth.back_to_login') }}
                 </a>
             </div>
         </form>

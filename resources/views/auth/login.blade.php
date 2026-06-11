@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Connexion - Brain Focus Football')
+@section('title', __('auth.login_meta_title'))
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center bg-slate-950 text-white px-4 py-12">
@@ -13,8 +13,8 @@
             <a href="{{ route('home') }}" class="text-3xl md:text-4xl font-black italic tracking-tighter uppercase select-none transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] inline-block mb-4">
                 <span class="text-amber-500">BRAIN</span><span class="text-white">FOCUS</span>
             </a>
-            <h1 class="text-3xl font-bold mb-2">Connexion</h1>
-            <p class="text-slate-400 text-sm">Accédez à votre profil joueur</p>
+            <h1 class="text-3xl font-bold mb-2">{{ __('auth.login_title') }}</h1>
+            <p class="text-slate-400 text-sm">{{ __('auth.login_subtitle') }}</p>
         </div>
 
         {{-- Carte de connexion --}}
@@ -26,7 +26,7 @@
                 {{-- Erreurs de validation --}}
                 @if ($errors->any())
                     <div class="mb-6 bg-red-500/10 border border-red-500/50 rounded-xl p-4">
-                        <p class="text-red-400 text-sm font-semibold mb-2">Erreur de connexion</p>
+                        <p class="text-red-400 text-sm font-semibold mb-2">{{ __('auth.error_header') }}</p>
                         <ul class="text-red-300 text-xs space-y-1">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -42,7 +42,7 @@
                     {{-- Email --}}
                     <div>
                         <label for="email" class="block text-sm font-medium text-slate-300 mb-2">
-                            Adresse email
+                            {{ __('auth.email_label') }}
                         </label>
                         <input 
                             type="email" 
@@ -52,14 +52,14 @@
                             required 
                             autofocus
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                            placeholder="ton.email@exemple.com"
+                            placeholder="{{ __('auth.email_placeholder') }}"
                         >
                     </div>
 
                     {{-- Mot de passe --}}
                     <div>
                         <label for="password" class="block text-sm font-medium text-slate-300 mb-2">
-                            Mot de passe
+                            {{ __('auth.password_label') }}
                         </label>
                         <input 
                             type="password" 
@@ -67,7 +67,7 @@
                             name="password" 
                             required
                             class="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition"
-                            placeholder="••••••••"
+                            placeholder="{{ __('auth.password_placeholder') }}"
                         >
                     </div>
 
@@ -81,11 +81,11 @@
                                 class="w-4 h-4 bg-slate-800 border-slate-700 rounded text-amber-500 focus:ring-2 focus:ring-amber-500 focus:ring-offset-0"
                             >
                             <label for="remember" class="ml-2 text-sm text-slate-300">
-                                Se souvenir de moi
+                                {{ __('auth.remember_me') }}
                             </label>
                         </div>
                         <a href="{{ route('password.request') }}" class="text-sm text-amber-400 hover:text-amber-300 transition">
-                            Mot de passe oublié ?
+                            {{ __('auth.forgot_password') }}
                         </a>
                     </div>
 
@@ -94,7 +94,7 @@
                         type="submit"
                         class="w-full px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold shadow-lg shadow-amber-500/30 transition transform hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        Se connecter
+                        {{ __('auth.login_button') }}
                     </button>
                 </form>
 
@@ -110,7 +110,7 @@
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                         </svg>
-                        Continuer avec Google
+                        {{ __('auth.google_button') }}
                     </a>
                 </div>
 
@@ -120,7 +120,7 @@
                         <div class="w-full border-t border-slate-700"></div>
                     </div>
                     <div class="relative flex justify-center text-xs">
-                        <span class="px-3 bg-slate-900 text-slate-400">Pas encore de compte ?</span>
+                        <span class="px-3 bg-slate-900 text-slate-400">{{ __('auth.no_account') }}</span>
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@
                     href="{{ route('register') }}"
                     class="block w-full px-6 py-3 rounded-xl border border-slate-600 hover:border-amber-400 text-center text-slate-200 hover:text-amber-300 font-semibold transition"
                 >
-                    Créer un compte
+                    {{ __('auth.create_account') }}
                 </a>
             </div>
         </div>
@@ -137,7 +137,7 @@
         {{-- Retour à l'accueil --}}
         <div class="text-center mt-6">
             <a href="{{ route('home') }}" class="text-sm text-slate-400 hover:text-amber-300 transition">
-                ← Retour à l'accueil
+                ← {{ __('auth.back_to_home') }}
             </a>
         </div>
     </div>
